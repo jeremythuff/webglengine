@@ -40,8 +40,6 @@ function EngineScope() {
 		    ajaxForVert.send(null);
 
 		    var ajaxForFrag = new XMLHttpRequest();
-
-			var shaders = {};
 	
 		    ajaxForFrag.open( 'GET', urls.frag);
 		    
