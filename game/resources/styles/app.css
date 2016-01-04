@@ -1,0 +1,29 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.menu {
+	width: 300px;
+    padding: 10px;
+    color: white;
+    position: absolute;
+    background: rgba(150,150,150,0.5);
+    top: 0;
+    left: 50%;
+    text-align: center;
+    font-family: sans-serif;
+    color: #efefef;
+    top: 25%;
+    margin-left: -160px;
+}
+
+.menuTitle {
+	font-weight: bold;
+	margin-bottom: 25px;
+}
+
+.menuItem.active {
+	color: #666;
+	background: #efefef;
+}
