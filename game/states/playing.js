@@ -3,8 +3,6 @@ function PlayingScope() {
 	include("engine/model/State.js", "State", this);
 	include("game/entities/world/sky.js", "Sky", this);
 
-	console.log(this);
-
 	var engine = appContext.getSingleton("engine");
 	var game = appContext.getSingleton("game");
 	var playing = new State("Playing");
@@ -23,9 +21,9 @@ function PlayingScope() {
 		
 		playing.cameraControls.target.set(0, 0, 0);
 
-		playing.camera.position.x = 175;
-		playing.camera.position.y = 100;
-		playing.camera.position.z = 175;
+		playing.camera.position.x = 17;
+		playing.camera.position.y = 10;
+		playing.camera.position.z = 17;
 
 		//configure renderer
 		game.renderer.shadowMap.enabled = true;
@@ -38,8 +36,37 @@ function PlayingScope() {
 		});
 
 		//loadMap
+		var boxDimensions = 1;
+		var xCount = 50;
+		var yCount = 5;
+		var zCount = 50;
+		var xStart = -25;
+		var yStart = 0;
+		var zStart = -25;
+
+
+		var geometry = new THREE.BoxGeometry( boxDimensions, boxDimensions, boxDimensions );
+		var material = new THREE.MeshNormalMaterial();
 		
+		for(var xi = 0; xi < xCount; xi++) {
+			for(var yi = 0; yi < yCount; yi++) {
+				for(var zi = 0; zi < zCount; zi++) {
+					playing.cube = new THREE.Mesh( geometry, material );
+					playing.cube.position.x = xStart;
+					playing.cube.position.y = yStart;
+					playing.cube.position.z = zStart;
+					playing.scene.add( playing.cube );
+					zStart += boxDimensions;
+				}
+				zStart = -25;
+				yStart += boxDimensions;
+			}
+			yStart = 0;
+			xStart += boxDimensions;
+		}
 		
+
+
 		//add charachter
 
 		console.log("Playing has been initialized");
