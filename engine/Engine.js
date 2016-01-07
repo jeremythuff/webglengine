@@ -23,36 +23,6 @@ function EngineScope() {
 			engine.startLoop(); 
 			return engine.game;
 		},
-		loadShaders: function(urls, cb) {
-			var ajaxForVert = new XMLHttpRequest();
-
-			var shaders = {};
-	
-		    ajaxForVert.open( 'GET', urls.vert);
-		    
-		    ajaxForVert.onreadystatechange = function () {
-		        if (ajaxForVert.readyState === 4) {
-		        	shaders.vert = ajaxForVert.response || ajaxForVert.responseText;
-		        	if(shaders.frag) cb(shaders);
-		        }
-		    };
-
-		    ajaxForVert.send(null);
-
-		    var ajaxForFrag = new XMLHttpRequest();
-	
-		    ajaxForFrag.open( 'GET', urls.frag);
-		    
-		    ajaxForFrag.onreadystatechange = function () {
-		        if (ajaxForFrag.readyState === 4) {
-		        	shaders.frag = ajaxForFrag.response || ajaxForFrag.responseText;
-		        	if(shaders.vert) cb(shaders);
-		        }
-		    };
-
-		    ajaxForFrag.send(null);
-			
-		},
 		startLoop: function(element) {
 			var engine = this;
 			var clock = new THREE.Clock();

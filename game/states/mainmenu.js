@@ -1,5 +1,7 @@
 function MainMenuScope() {
 	
+	include("engine/model/State.js", "State", this);
+
 	var mainmenu = new State("MainMenu");
 	var game = appContext.getSingleton("Game");
 	

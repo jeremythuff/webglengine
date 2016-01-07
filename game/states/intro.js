@@ -1,5 +1,7 @@
 function IntroScope() {
 
+	include("engine/model/State.js", "State", this);
+	
 	var game = appContext.getSingleton("Game");
 	var intro = new State("Intro");
 
