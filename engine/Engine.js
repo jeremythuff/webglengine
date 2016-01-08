@@ -30,7 +30,7 @@ function EngineScope() {
 
 			engine.renderStats.fps.setMode(0);
 			engine.renderStats.ms.setMode(1);
-			engine.renderStats.mg.setMode(2);
+			engine.renderStats.mb.setMode(2);
 
 			engine.renderStats.fps.domElement.style.position   = 'absolute';
 			engine.renderStats.fps.domElement.style.left  = '0px';
@@ -40,9 +40,9 @@ function EngineScope() {
 			engine.renderStats.ms.domElement.style.left  = '100px';
 			engine.renderStats.ms.domElement.style.top    = '0px';
 
-			engine.renderStats.mg.domElement.style.position   = 'absolute';
-			engine.renderStats.mg.domElement.style.left  = '200px';
-			engine.renderStats.mg.domElement.style.top    = '0px';
+			engine.renderStats.mb.domElement.style.position   = 'absolute';
+			engine.renderStats.mb.domElement.style.left  = '200px';
+			engine.renderStats.mb.domElement.style.top    = '0px';
 
 			engine.startLoop(); 
 			return engine.game;
@@ -52,11 +52,11 @@ function EngineScope() {
 			if(active) {
 				document.body.appendChild(engine.renderStats.fps.domElement);
 				document.body.appendChild(engine.renderStats.ms.domElement);
-				document.body.appendChild(engine.renderStats.mg.domElement);
+				document.body.appendChild(engine.renderStats.mb.domElement);
 			} else {
 				engine.renderStats.fps.domElement.remove();
 				engine.renderStats.ms.domElement.remove();
-				engine.renderStats.mg.domElement.remove();
+				engine.renderStats.mb.domElement.remove();
 			}
 			engine.renderStatsActive = active;
 		},
@@ -77,7 +77,7 @@ function EngineScope() {
 	            	if(engine.renderStatsActive) {
 	            		engine.renderStats.fps.begin();
 	            		engine.renderStats.ms.begin();
-	            		engine.renderStats.mg.begin();
+	            		engine.renderStats.mb.begin();
 	            	}
 	            	engine.game.update( delta );
 	            	if ( delta < 160 ) {
@@ -86,7 +86,7 @@ function EngineScope() {
 		            if(engine.renderStatsActive) {
 	            		engine.renderStats.fps.end();
 	            		engine.renderStats.ms.end();
-	            		engine.renderStats.mg.end();
+	            		engine.renderStats.mb.end();
 	            	}
 	            }
 	            
