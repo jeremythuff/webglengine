@@ -2,6 +2,7 @@ function PlayingScope() {
 
 	include("engine/model/State.js", "State", this);
 	include("game/entities/world/sky.js", "Sky", this);
+	include("game/entities/world/voxel.js", "Voxel", this);
 
 	var engine = appContext.getSingleton("engine");
 	var game = appContext.getSingleton("game");
@@ -10,24 +11,37 @@ function PlayingScope() {
 	playing.registerInitCB(function() {
 
 		//if the playing state has already been inititialized then return control and skip 
+		
+		engine.toggleRenderStats(true);
+
 		if(playing.initialized) {
 			playing.activeControll(true);
 			return;
 		}
 
 		//create camera
-		playing.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 );
+		playing.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
 		if(!playing.cameraControls) playing.cameraControls = new THREE.OrbitControls( playing.camera );
-		
 		playing.cameraControls.target.set(0, 0, 0);
 
-		playing.camera.position.x = 17;
-		playing.camera.position.y = 10;
-		playing.camera.position.z = 17;
+		playing.camera.position.x = 170;
+		playing.camera.position.y = 100;
+		playing.camera.position.z = 170;
 
 		//configure renderer
 		game.renderer.shadowMap.enabled = true;
 		game.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+		//add lights
+		 // add subtle ambient lighting
+        var ambiColor = "#0c0c0c";
+        playing.ambientLight = new THREE.AmbientLight(ambiColor);
+        playing.scene.add(playing.ambientLight);
+         // add spotlight for the shadows
+        playing.spotLight = new THREE.SpotLight(0xffffff);
+        playing.spotLight.position.set(40, 100, 10);
+        playing.spotLight.castShadow = true;
+        playing.scene.add(playing.spotLight);
 
 		//add skybox
 		playing.sky = new Sky('game/resources/img/sky3.jpg');
@@ -36,35 +50,13 @@ function PlayingScope() {
 		});
 
 		//loadMap
-		var boxDimensions = 1;
-		var xCount = 50;
-		var yCount = 5;
-		var zCount = 50;
-		var xStart = -25;
-		var yStart = 0;
-		var zStart = -25;
+		var position = new THREE.Vector3(0,0,0);
+		var voxel = new Voxel(position);
+		playing.scene.add(voxel.mesh);
 
-
-		var geometry = new THREE.BoxGeometry( boxDimensions, boxDimensions, boxDimensions );
-		var material = new THREE.MeshNormalMaterial();
-		
-		for(var xi = 0; xi < xCount; xi++) {
-			for(var yi = 0; yi < yCount; yi++) {
-				for(var zi = 0; zi < zCount; zi++) {
-					playing.cube = new THREE.Mesh( geometry, material );
-					playing.cube.position.x = xStart;
-					playing.cube.position.y = yStart;
-					playing.cube.position.z = zStart;
-					playing.scene.add( playing.cube );
-					zStart += boxDimensions;
-				}
-				zStart = -25;
-				yStart += boxDimensions;
-			}
-			yStart = 0;
-			xStart += boxDimensions;
-		}
-		
+		position = new THREE.Vector3(-5,5,-5);
+		voxel = new Voxel(position);
+		playing.scene.add(voxel.mesh);
 
 
 		//add charachter
@@ -73,6 +65,10 @@ function PlayingScope() {
 	});
 
 	playing.registerListener("keydown", function(e) {
+		if(e.which==27) {
+			game.setState("MainMenu");
+		}
+
 		if(e.which==27) {
 			game.setState("MainMenu");
 		}
@@ -86,6 +82,7 @@ function PlayingScope() {
 	playing.registerCloseCB(function() {
 		console.log("Closing Playing");
 		playing.activeControll(false);
+		engine.toggleRenderStats(false);
 	});
 
 	playing.activeControll = function(active) {

@@ -18,7 +18,7 @@ function SkyScope() {
 			var sky = this;
 
 			game.textureLoader.load(this.texture, function(tex) {
-				skyGeometry = new THREE.SphereGeometry(3000, 60, 40);  
+				skyGeometry = new THREE.SphereGeometry(1500, 60, 40);  
 				
 				var uniforms = {  
 				  texture: { type: 't', value: tex }
