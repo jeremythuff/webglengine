@@ -2,6 +2,7 @@ function PlayingScope() {
 
 	include("engine/model/State.js", "State", this);
 	include("game/entities/world/sky.js", "Sky", this);
+	include("game/entities/world/GameMap.js", "GameMap", this);
 	include("game/entities/world/voxel.js", "Voxel", this);
 
 	var engine = appContext.getSingleton("engine");
@@ -37,11 +38,14 @@ function PlayingScope() {
         var ambiColor = "#0c0c0c";
         playing.ambientLight = new THREE.AmbientLight(ambiColor);
         playing.scene.add(playing.ambientLight);
-         // add spotlight for the shadows
+        // add light
         playing.spotLight = new THREE.SpotLight(0xffffff);
         playing.spotLight.position.set(40, 100, 10);
         playing.spotLight.castShadow = true;
         playing.scene.add(playing.spotLight);
+
+        playing.ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+		playing.scene.add( playing.ambientLight );
 
 		//add skybox
 		playing.sky = new Sky('game/resources/img/sky3.jpg');
@@ -50,13 +54,52 @@ function PlayingScope() {
 		});
 
 		//loadMap
-		var position = new THREE.Vector3(0,0,0);
-		var voxel = new Voxel(position);
-		playing.scene.add(voxel.mesh);
+		playing.gameMap = new GameMap("game/data/maps/testMap.json");
+		playing.gameMap.init(function() {
+			
+			var xstart = 0;
+			var ystart = 0;
+			var zstart = 0;
 
-		position = new THREE.Vector3(-5,5,-5);
-		voxel = new Voxel(position);
-		playing.scene.add(voxel.mesh);
+			var xpos = xstart;
+			var ypos = ystart;
+			var zpos = zstart;
+
+			var xlength = playing.gameMap.meta.size.x;
+			var ylength = playing.gameMap.meta.size.y;
+			var zlength = playing.gameMap.meta.size.z;
+
+			for(var index in playing.gameMap.data) {
+
+				var voxType = playing.gameMap.data[index];
+
+
+
+				var addVoxel =  (xpos-1 < 0 || xpos+1 == xlength) ||
+								(ypos-1 < 0 || ypos+1 == ylength) || 
+								(zpos-1 < 0 || zpos+1 == zlength); 
+
+				if(addVoxel) {
+					var position = new THREE.Vector3(xpos,ypos,zpos);
+					var voxel = new Voxel(position);
+					playing.scene.add(voxel.mesh);
+				}
+
+				xpos++;
+				if(xpos == xlength) {
+					xpos = xstart;
+					zpos++;
+					if(zpos == zlength) {
+						zpos = zstart;
+						ypos++;
+						if(ypos == ylength) {
+							ypos = ystart;
+						}
+					}					
+				}
+			}
+
+		});
 
 
 		//add charachter
@@ -65,7 +108,6 @@ function PlayingScope() {
 	});
 
 	playing.registerListener("keydown", function(e) {
-		console.log("foo");
 		if(e.which==27) {
 			game.setState("MainMenu");
 		}

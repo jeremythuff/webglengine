@@ -86,9 +86,7 @@ var UtilsScope = function()  {
 			var xhrReq = new XMLHttpRequest();
 			var sync = typeof(sync) == "undefined" ? true : false;
 
-			console.log(sync);
-
-			xhrReq.open( 'GET', url, sync);
+			xhrReq.open( 'GET', url+"?_=" + new Date().getTime(), sync);
 
 			xhrReq.onreadystatechange = function () {
 				if(xhrReq.readyState == 4) {
