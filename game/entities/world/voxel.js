@@ -1,6 +1,6 @@
 function VoxelScope() {
 
-	var game = appContext.getSingleton("Game");
+	var game = appContext.getSingleton("game");
 
 	var cubeGeo = new THREE.BoxGeometry( 5, 5, 5 );
 	var cubeMaterial =  new THREE.MeshLambertMaterial( { color: 0xfeb74c} );

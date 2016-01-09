@@ -14,10 +14,8 @@ function EngineScope() {
 	Engine.prototype = {
 		init: function(name, main, mainName, parentscope) {
 			var engine = this;
-
-			appContext.makeSingleton("Game", new Game(name))
 			
-			engine.game = appContext.getSingleton("Game");
+			engine.game = new Game(name);
 			engine.utils = new Utils();
 
 			include(main, mainName, parentscope);

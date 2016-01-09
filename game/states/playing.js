@@ -15,7 +15,7 @@ function PlayingScope() {
 		engine.utils.toggleRenderStats(true);
 
 		if(playing.initialized) {
-			playing.utils.activeControll(true);
+			playing.activeControll(true);
 			return;
 		}
 
@@ -65,6 +65,7 @@ function PlayingScope() {
 	});
 
 	playing.registerListener("keydown", function(e) {
+		console.log("foo");
 		if(e.which==27) {
 			game.setState("MainMenu");
 		}
@@ -77,7 +78,7 @@ function PlayingScope() {
 
 	playing.registerCloseCB(function() {
 		console.log("Closing Playing");
-		playing.utils.activeControll(false);
+		playing.activeControll(false);
 		engine.utils.toggleRenderStats(false);
 	});
 

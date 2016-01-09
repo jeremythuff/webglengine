@@ -3,7 +3,7 @@ function MainMenuScope() {
 	include("engine/model/State.js", "State", this);
 
 	var mainmenu = new State("MainMenu");
-	var game = appContext.getSingleton("Game");
+	var game = appContext.getSingleton("game");
 	
 	mainmenu.registerInitCB(function() {
 		console.log("Main Menu has been initialized");
