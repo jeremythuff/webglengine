@@ -73,14 +73,12 @@ function PlayingScope() {
 
 				var voxType = playing.gameMap.data[index];
 
-
-
 				var addVoxel =  (xpos-1 < 0 || xpos+1 == xlength) ||
 								(ypos-1 < 0 || ypos+1 == ylength) || 
 								(zpos-1 < 0 || zpos+1 == zlength); 
 
 				if(addVoxel) {
-					var position = new THREE.Vector3(xpos,ypos,zpos);
+					var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
 					var voxel = new Voxel(position);
 					playing.scene.add(voxel.mesh);
 				}
