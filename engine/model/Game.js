@@ -10,13 +10,6 @@ function GameScope() {
 		game.states = {};
 		game.listeners = {}
 
-		game.resourceLoaderManager = new THREE.LoadingManager();
-		game.textureLoader = new THREE.TextureLoader(game.resourceLoaderManager);
-		
-		game.resourceLoaderManager.onProgress = function ( item, loaded, total ) {
-			console.log( item, loaded, total );
-		};
-
     	game.screen.canvas = document.createElement('canvas');
     	game.screen.ctx = game.screen.canvas.getContext('3d');
 
@@ -37,36 +30,6 @@ function GameScope() {
 			document.body.insertBefore(game.renderer.domElement, document.body.firstChild);
 		
 			cb();
-		},
-		loadShaders: function(urls, cb) {
-			var ajaxForVert = new XMLHttpRequest();
-
-			var shaders = {};
-	
-		    ajaxForVert.open( 'GET', urls.vert);
-		    
-		    ajaxForVert.onreadystatechange = function () {
-		        if (ajaxForVert.readyState === 4) {
-		        	shaders.vert = ajaxForVert.response || ajaxForVert.responseText;
-		        	if(shaders.frag) cb(shaders);
-		        }
-		    };
-
-		    ajaxForVert.send(null);
-
-		    var ajaxForFrag = new XMLHttpRequest();
-	
-		    ajaxForFrag.open( 'GET', urls.frag);
-		    
-		    ajaxForFrag.onreadystatechange = function () {
-		        if (ajaxForFrag.readyState === 4) {
-		        	shaders.frag = ajaxForFrag.response || ajaxForFrag.responseText;
-		        	if(shaders.vert) cb(shaders);
-		        }
-		    };
-
-		    ajaxForFrag.send(null);
-			
 		},
 		start: function(stateName) {
 			var game = this;

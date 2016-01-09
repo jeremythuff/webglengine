@@ -1,10 +1,10 @@
 function EngineScope() {
 	include("engine/model/Game.js", "Game", this);
+	include("engine/utils/Utils.js", "Utils", this);
 
 	var Engine = function() {
 		var engine = this;
 		engine.game = null;	
-		engine.renderStatsActive = false;
 
 		appContext.makeSingleton("engine", this);
 
@@ -18,47 +18,14 @@ function EngineScope() {
 			appContext.makeSingleton("Game", new Game(name))
 			
 			engine.game = appContext.getSingleton("Game");
+			engine.utils = new Utils();
 
 			include(main, mainName, parentscope);
 
-			//render stats
-			engine.renderStats = {
-				fps: new Stats(),
-				ms: new Stats(),
-				mg: new Stats()
-			}		
-
-			engine.renderStats.fps.setMode(0);
-			engine.renderStats.ms.setMode(1);
-			engine.renderStats.mb.setMode(2);
-
-			engine.renderStats.fps.domElement.style.position   = 'absolute';
-			engine.renderStats.fps.domElement.style.left  = '0px';
-			engine.renderStats.fps.domElement.style.top    = '0px';
-
-			engine.renderStats.ms.domElement.style.position   = 'absolute';
-			engine.renderStats.ms.domElement.style.left  = '100px';
-			engine.renderStats.ms.domElement.style.top    = '0px';
-
-			engine.renderStats.mb.domElement.style.position   = 'absolute';
-			engine.renderStats.mb.domElement.style.left  = '200px';
-			engine.renderStats.mb.domElement.style.top    = '0px';
+			engine.utils.loadStats();
 
 			engine.startLoop(); 
 			return engine.game;
-		},
-		toggleRenderStats: function(active) {
-			var engine = this;
-			if(active) {
-				document.body.appendChild(engine.renderStats.fps.domElement);
-				document.body.appendChild(engine.renderStats.ms.domElement);
-				document.body.appendChild(engine.renderStats.mb.domElement);
-			} else {
-				engine.renderStats.fps.domElement.remove();
-				engine.renderStats.ms.domElement.remove();
-				engine.renderStats.mb.domElement.remove();
-			}
-			engine.renderStatsActive = active;
 		},
 		startLoop: function(element) {
 			var engine = this;
@@ -74,19 +41,19 @@ function EngineScope() {
 	            var delta = clock.getDelta();
 
 	            if ( engine.game.running !== false ) {
-	            	if(engine.renderStatsActive) {
-	            		engine.renderStats.fps.begin();
-	            		engine.renderStats.ms.begin();
-	            		engine.renderStats.mb.begin();
+	            	if(engine.utils.renderStatsActive) {
+	            		engine.utils.renderStats.fps.begin();
+	            		engine.utils.renderStats.ms.begin();
+	            		engine.utils.renderStats.mb.begin();
 	            	}
 	            	engine.game.update( delta );
 	            	if ( delta < 160 ) {
 		                engine.game.render( delta );		           
 		            }
-		            if(engine.renderStatsActive) {
-	            		engine.renderStats.fps.end();
-	            		engine.renderStats.ms.end();
-	            		engine.renderStats.mb.end();
+		            if(engine.utils.renderStatsActive) {
+	            		engine.utils.renderStats.fps.end();
+	            		engine.utils.renderStats.ms.end();
+	            		engine.utils.renderStats.mb.end();
 	            	}
 	            }
 	            

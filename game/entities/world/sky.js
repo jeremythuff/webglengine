@@ -1,6 +1,7 @@
 function SkyScope() {
 
-	var game = appContext.getSingleton("Game");
+	var engine = appContext.getSingleton("engine");
+	var game = appContext.getSingleton("game");
 
 	var Sky = function(texture, vertexShader, fragmentShader) {
 	
@@ -17,18 +18,20 @@ function SkyScope() {
 
 			var sky = this;
 
-			game.textureLoader.load(this.texture, function(tex) {
+			engine.utils.textureLoader.load(this.texture, function(tex) {
 				skyGeometry = new THREE.SphereGeometry(1500, 60, 40);  
 				
 				var uniforms = {  
 				  texture: { type: 't', value: tex }
 				};
 
-				game.loadShaders({
+				engine.utils.loadShaders({
 					vert: sky.vertexShader, 
 					frag: sky.fragmentShader 
 				}, function(shaders) {
 					
+					console.log("load shaders in sky");
+
 					var material = new THREE.ShaderMaterial( {  
 					  uniforms:       uniforms,
 					  vertexShader:   shaders.vert,

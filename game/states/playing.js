@@ -12,10 +12,10 @@ function PlayingScope() {
 
 		//if the playing state has already been inititialized then return control and skip 
 		
-		engine.toggleRenderStats(true);
+		engine.utils.toggleRenderStats(true);
 
 		if(playing.initialized) {
-			playing.activeControll(true);
+			playing.utils.activeControll(true);
 			return;
 		}
 
@@ -68,10 +68,6 @@ function PlayingScope() {
 		if(e.which==27) {
 			game.setState("MainMenu");
 		}
-
-		if(e.which==27) {
-			game.setState("MainMenu");
-		}
 	});
 
 	playing.registerRenderCB(function(delta) {
@@ -81,8 +77,8 @@ function PlayingScope() {
 
 	playing.registerCloseCB(function() {
 		console.log("Closing Playing");
-		playing.activeControll(false);
-		engine.toggleRenderStats(false);
+		playing.utils.activeControll(false);
+		engine.utils.toggleRenderStats(false);
 	});
 
 	playing.activeControll = function(active) {
