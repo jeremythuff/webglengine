@@ -4,6 +4,7 @@ function PlayingScope() {
 	include("game/entities/world/sky.js", "Sky", this);
 	include("game/entities/world/GameMap.js", "GameMap", this);
 	include("game/entities/world/voxel.js", "Voxel", this);
+	include("game/entities/charachter/playerCharachter.js", "PlayerCharachter", this);
 
 	var engine = appContext.getSingleton("engine");
 	var game = appContext.getSingleton("game");
@@ -107,17 +108,10 @@ function PlayingScope() {
 
 
 		//add charachter
-		var charGeo = new THREE.BoxGeometry( 10, 20, 10 );
-		var charMaterial = new THREE.MeshLambertMaterial( { color: 0xd8675d} );
-		playing.charachter = new THREE.Mesh( charGeo, charMaterial );
-
-		playing.charachter.position.x = 0;
-		playing.charachter.position.y = 5;
-		playing.charachter.position.z = 0;
-
-		playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
-
-		playing.scene.add(playing.charachter);		
+		playing.charachter = new PlayerCharachter();
+		playing.charachter.init(new THREE.Vector3(0,5,0));
+		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
+		playing.scene.add(playing.charachter.mesh);		
 
 		console.log("Playing has been initialized");
 	});
@@ -126,10 +120,10 @@ function PlayingScope() {
 		
 		if(e.which==87) {
 			//w
-			playing.charachter.translateZ(2);
-			playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
+			playing.charachter.mesh.translateZ(2);
+			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
-			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.position);
+			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
 
 			if(distanceFromChar >= 300) {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
@@ -139,15 +133,15 @@ function PlayingScope() {
 
 		if(e.which==68) {
 			//d
-			playing.charachter.rotation.y -= 0.1;
+			playing.charachter.mesh.rotation.y -= 0.1;
 		}
 
 		if(e.which==83) {
 			//s
-			playing.charachter.translateZ(-2);
-			playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
+			playing.charachter.mesh.translateZ(-2);
+			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
-			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.position);
+			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
 
 			if(distanceFromChar >= 300) {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
@@ -156,7 +150,7 @@ function PlayingScope() {
 
 		if(e.which==65) {
 			//a
-			playing.charachter.rotation.y += 0.1;	
+			playing.charachter.mesh.rotation.y += 0.1;	
 		}
 
 		if(e.which==27) {
