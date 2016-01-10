@@ -72,13 +72,18 @@ function PlayingScope() {
 
 				var voxType = playing.gameMap.data[index];
 
+				
+
 				var addVoxel =  (xpos-1 < 0 || xpos+1 == xlength) ||
 								(ypos-1 < 0 || ypos+1 == ylength) || 
 								(zpos-1 < 0 || zpos+1 == zlength); 
 
-				if(addVoxel) {
+
+
+				if(voxType != 0) {
 					var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
 					var voxel = new Voxel(position, voxType);
+					if(!addVoxel) voxel.mesh.traverse( function ( object ) { object.visible = false; } );
 					playing.scene.add(voxel.mesh);
 				}
 
@@ -94,6 +99,8 @@ function PlayingScope() {
 						}
 					}					
 				}
+
+
 			}
 
 		});
@@ -105,7 +112,7 @@ function PlayingScope() {
 		playing.charachter = new THREE.Mesh( charGeo, charMaterial );
 
 		playing.charachter.position.x = 0;
-		playing.charachter.position.y = 10;
+		playing.charachter.position.y = 5;
 		playing.charachter.position.z = 0;
 
 		playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
@@ -122,8 +129,10 @@ function PlayingScope() {
 			playing.charachter.translateZ(2);
 			playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
 
-			if(playing.camera.position.distanceTo(playing.charachter.position) > 300) {
-				playing.camera.translateZ(-3);
+			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.position);
+
+			if(distanceFromChar >= 300) {
+				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 
 		}
@@ -138,8 +147,10 @@ function PlayingScope() {
 			playing.charachter.translateZ(-2);
 			playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
 
-			if(playing.camera.position.distanceTo(playing.charachter.position) > 300) {
-				playing.camera.translateZ(-3);
+			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.position);
+
+			if(distanceFromChar >= 300) {
+				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 		}
 
