@@ -23,7 +23,6 @@ function PlayingScope() {
 		//create camera
 		playing.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
 		if(!playing.cameraControls) playing.cameraControls = new THREE.OrbitControls( playing.camera );
-		playing.cameraControls.target.set(0, 0, 0);
 
 		playing.camera.position.x = 170;
 		playing.camera.position.y = 100;
@@ -40,7 +39,7 @@ function PlayingScope() {
         playing.scene.add(playing.ambientLight);
         // add light
         playing.spotLight = new THREE.SpotLight(0xffffff);
-        playing.spotLight.position.set(40, 100, 10);
+        playing.spotLight.position.set(40, 200, 10);
         playing.spotLight.castShadow = true;
         playing.scene.add(playing.spotLight);
 
@@ -79,7 +78,7 @@ function PlayingScope() {
 
 				if(addVoxel) {
 					var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
-					var voxel = new Voxel(position);
+					var voxel = new Voxel(position, voxType);
 					playing.scene.add(voxel.mesh);
 				}
 
@@ -101,14 +100,58 @@ function PlayingScope() {
 
 
 		//add charachter
+		var charGeo = new THREE.BoxGeometry( 10, 20, 10 );
+		var charMaterial = new THREE.MeshLambertMaterial( { color: 0xd8675d} );
+		playing.charachter = new THREE.Mesh( charGeo, charMaterial );
+
+		playing.charachter.position.x = 0;
+		playing.charachter.position.y = 10;
+		playing.charachter.position.z = 0;
+
+		playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
+
+		playing.scene.add(playing.charachter);		
 
 		console.log("Playing has been initialized");
 	});
 
 	playing.registerListener("keydown", function(e) {
+		
+		if(e.which==87) {
+			//w
+			playing.charachter.translateZ(2);
+			playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
+
+			if(playing.camera.position.distanceTo(playing.charachter.position) > 300) {
+				playing.camera.translateZ(-3);
+			}
+
+		}
+
+		if(e.which==68) {
+			//d
+			playing.charachter.rotation.y -= 0.1;
+		}
+
+		if(e.which==83) {
+			//s
+			playing.charachter.translateZ(-2);
+			playing.cameraControls.target.set(playing.charachter.position.x, playing.charachter.position.y, playing.charachter.position.z);
+
+			if(playing.camera.position.distanceTo(playing.charachter.position) > 300) {
+				playing.camera.translateZ(-3);
+			}
+		}
+
+		if(e.which==65) {
+			//a
+			playing.charachter.rotation.y += 0.1;	
+		}
+
 		if(e.which==27) {
 			game.setState("MainMenu");
 		}
+
 	});
 
 	playing.registerRenderCB(function(delta) {
