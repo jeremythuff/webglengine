@@ -9,7 +9,7 @@ function VoxelScope() {
 	var rockMaterial =  new THREE.MeshLambertMaterial( { color: 0x50626b} ); 
 	var sandMaterial =  new THREE.MeshLambertMaterial( { color: 0xccd37e} );
 	var clayMaterial =  new THREE.MeshLambertMaterial( { color: 0xf28a35} );
-	var waterMaterial =  new THREE.MeshLambertMaterial( { color: 0xf158ec6} );
+	var waterMaterial =  new THREE.MeshLambertMaterial( { color: 0xf158ec6,  opacity:0.75, transparent: true} );
 	var grassMaterial =  new THREE.MeshLambertMaterial( { color: 0x6db768} ); 
 	 
 	var Voxel = function(position, type) {
@@ -40,6 +40,10 @@ function VoxelScope() {
 		this.mesh.position.x = position.x * voxelSize;
 		this.mesh.position.y = position.y * voxelSize;
 		this.mesh.position.z = position.z * voxelSize;
+		
+		this.mesh.castShadow = true;
+		this.mesh.receiveShadow = true;
+		
 		return this;
 	}
 

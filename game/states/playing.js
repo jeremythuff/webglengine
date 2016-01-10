@@ -120,12 +120,12 @@ function PlayingScope() {
 		
 		if(e.which==87) {
 			//w
-			playing.charachter.mesh.translateZ(2);
+			playing.charachter.mesh.translateX(2);
 			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
 			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
 
-			if(distanceFromChar >= 300) {
+			if(distanceFromChar >= 350) {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 
@@ -138,12 +138,12 @@ function PlayingScope() {
 
 		if(e.which==83) {
 			//s
-			playing.charachter.mesh.translateZ(-2);
+			playing.charachter.mesh.translateX(-2);
 			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
 			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
 
-			if(distanceFromChar >= 300) {
+			if(distanceFromChar >= 350) {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 		}
