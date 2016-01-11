@@ -6,13 +6,13 @@ var GrassMaterialScope = function() {
 
 	    // Front
 	    materialArray.push(new THREE.MeshLambertMaterial({
-	        color:0x6db768,
+	        color:0xfeb74a,
 	        visible: false
 	    }));
 	    
 	    // Back
 	    materialArray.push(new THREE.MeshLambertMaterial({
-	        color:0x6db768,
+	        color:0xfeb74a,
 	        visible: false
 	    }));
 
@@ -24,19 +24,19 @@ var GrassMaterialScope = function() {
 
 	    // Bottom
 	    materialArray.push(new THREE.MeshLambertMaterial({
-	        color:0x6db768,
+	        color:0xfeb74a,
 	        visible: false
 	    }));
 
 	    // Right
 	    materialArray.push(new THREE.MeshLambertMaterial({
-	        color:0x6db768,
+	        color:0xfeb74a,
 	        visible: false
 	    }));
 	    
 	    // Left
 	    materialArray.push(new THREE.MeshLambertMaterial({
-	        color:0x6db768,
+	        color:0xfeb74a,
 	        visible: false
 	    }));
 
