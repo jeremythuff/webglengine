@@ -104,8 +104,8 @@ function PlayingScope() {
 						var voxel = new Voxel(position, voxType);
 						voxel.name = index;
 
-						for(var side in sides)  {
-							voxel.show(side);
+						for(var index in sides)  {
+							voxel.show(sides[index]);
 						}
 
 						playing.terrain.add(voxel.mesh);
