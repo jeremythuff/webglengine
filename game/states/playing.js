@@ -34,18 +34,15 @@ function PlayingScope() {
 		game.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 		//add lights
-		 // add subtle ambient lighting
-        var ambiColor = "#0c0c0c";
-        playing.ambientLight = new THREE.AmbientLight(ambiColor);
-        playing.scene.add(playing.ambientLight);
+		// add subtle ambient lighting
+        playing.ambientLight = new THREE.AmbientLight( 0x555555 ); // soft white light
+		playing.scene.add( playing.ambientLight );
+
         // add light
-        playing.spotLight = new THREE.SpotLight(0xffffff);
-        playing.spotLight.position.set(40, 200, 10);
+        playing.spotLight = new THREE.SpotLight(0xbbbbbb);
+        playing.spotLight.position.set(0, 500, 0);
         playing.spotLight.castShadow = true;
         playing.scene.add(playing.spotLight);
-
-        playing.ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
-		playing.scene.add( playing.ambientLight );
 
 		//add skybox
 		playing.sky = new Sky('game/resources/img/sky3.jpg');
@@ -56,6 +53,9 @@ function PlayingScope() {
 		//loadMap
 		playing.gameMap = new GameMap("game/data/maps/testMap.json");
 		playing.gameMap.init(function() {
+
+			playing.terrain = new THREE.Object3D();
+			playing.scene.add(playing.terrain);
 			
 			var xstart = 0;
 			var ystart = 0;
@@ -73,19 +73,21 @@ function PlayingScope() {
 
 				var voxType = playing.gameMap.data[index];
 
-				
-
-				var addVoxel =  (xpos-1 < 0 || xpos+1 == xlength) ||
-								(ypos-1 < 0 || ypos+1 == ylength) || 
-								(zpos-1 < 0 || zpos+1 == zlength); 
-
-
-
 				if(voxType != 0) {
 					var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
 					var voxel = new Voxel(position, voxType);
-					if(!addVoxel) voxel.mesh.traverse( function ( object ) { object.visible = false; } );
-					playing.scene.add(voxel.mesh);
+					//if(!addVoxel) voxel.mesh.traverse( function ( object ) { object.visible = false; } );
+					playing.terrain.add(voxel.mesh);
+
+					if(playing.gameMap.data[parseInt(index)+1] == 0 || xpos+1 >= playing.gameMap.meta.size.x) voxel.show("front");
+					if(playing.gameMap.data[parseInt(index)-1] == 0 || xpos-1 < 0) voxel.show("back");
+
+					if(playing.gameMap.data[parseInt(index)+playing.gameMap.meta.size.x] == 0 || zpos+1 >= playing.gameMap.meta.size.z) voxel.show("right");
+					if(playing.gameMap.data[parseInt(index)-playing.gameMap.meta.size.x] == 0 || zpos-1 < 0) voxel.show("left");
+
+					if(playing.gameMap.data[parseInt(index)+(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos+1 >= playing.gameMap.meta.size.y) voxel.show("top");
+					if(playing.gameMap.data[parseInt(index)-(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos-1 < 0) voxel.show("bottom");
+
 				}
 
 				xpos++;
@@ -105,7 +107,6 @@ function PlayingScope() {
 			}
 
 		});
-
 
 		//add charachter
 		playing.charachter = new PlayerCharachter();

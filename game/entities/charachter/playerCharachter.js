@@ -1,7 +1,7 @@
 var PlayerCharachterScope = function() {
 
 	var charGeo = new THREE.BoxGeometry( 10, 20, 10 );
-	//var charMaterial = new THREE.MeshLambertMaterial( { color: 0xd8675d} );
+	//var charMaterials = new THREE.MeshLambertMaterial( { color: 0xd8675d} );
 
 	var materialArray = [];
 
@@ -35,7 +35,7 @@ var PlayerCharachterScope = function() {
         color:0xd8675d,
     }));
 
-    var charMaterial = new THREE.MeshFaceMaterial(materialArray);
+    var charMaterials = new THREE.MeshFaceMaterial(materialArray);
 	
 	var PlayerCharachter = function() {
 		
@@ -51,7 +51,9 @@ var PlayerCharachterScope = function() {
 
 			var player = this;
 
-			player.mesh = new THREE.Mesh( charGeo, charMaterial );
+			player.materials = materialArray;
+			
+			player.mesh = new THREE.Mesh( charGeo, charMaterials );
 			player.mesh.position.set(position.x, position.y, position.z);
 			player.mesh.castShadow = true;
 
