@@ -74,19 +74,42 @@ function PlayingScope() {
 				var voxType = playing.gameMap.data[index];
 
 				if(voxType != 0) {
-					var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
-					var voxel = new Voxel(position, voxType);
-					//if(!addVoxel) voxel.mesh.traverse( function ( object ) { object.visible = false; } );
-					playing.terrain.add(voxel.mesh);
 
-					if(playing.gameMap.data[parseInt(index)+1] == 0 || xpos+1 >= playing.gameMap.meta.size.x) voxel.show("front");
-					if(playing.gameMap.data[parseInt(index)-1] == 0 || xpos-1 < 0) voxel.show("back");
+					var sides = [];
 
-					if(playing.gameMap.data[parseInt(index)+playing.gameMap.meta.size.x] == 0 || zpos+1 >= playing.gameMap.meta.size.z) voxel.show("right");
-					if(playing.gameMap.data[parseInt(index)-playing.gameMap.meta.size.x] == 0 || zpos-1 < 0) voxel.show("left");
+					if(playing.gameMap.data[parseInt(index)+1] == 0 || xpos+1 >= playing.gameMap.meta.size.x) {
+						sides.push("front");
+					}
+					if(playing.gameMap.data[parseInt(index)-1] == 0 || xpos-1 < 0) {
+						sides.push("back");
+					}
 
-					if(playing.gameMap.data[parseInt(index)+(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos+1 >= playing.gameMap.meta.size.y) voxel.show("top");
-					if(playing.gameMap.data[parseInt(index)-(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos-1 < 0) voxel.show("bottom");
+					if(playing.gameMap.data[parseInt(index)+playing.gameMap.meta.size.x] == 0 || zpos+1 >= playing.gameMap.meta.size.z) {
+						sides.push("right");
+					}
+					if(playing.gameMap.data[parseInt(index)-playing.gameMap.meta.size.x] == 0 || zpos-1 < 0) {
+						sides.push("left");
+					}
+
+					if(playing.gameMap.data[parseInt(index)+(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos+1 >= playing.gameMap.meta.size.y) {
+						sides.push("top");
+					}
+
+					if(playing.gameMap.data[parseInt(index)-(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos-1 < 0) {
+						sides.push("bottom");
+					}
+
+					if(sides.length > 0) {
+						var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
+						var voxel = new Voxel(position, voxType);
+						voxel.name = index;
+
+						for(var side in sides)  {
+							voxel.show(side);
+						}
+
+						playing.terrain.add(voxel.mesh);
+					}
 
 				}
 
