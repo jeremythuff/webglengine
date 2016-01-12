@@ -51,106 +51,25 @@ function PlayingScope() {
 		});
 
 		//loadMap
+		playing.terrain = new THREE.Object3D();
+		playing.scene.add(playing.terrain);
+
 		playing.gameMap = new GameMap("game/data/maps/testMap.json");
-		playing.gameMap.init(function() {
+		playing.gameMap.init(playing.terrain);
 
-			playing.terrain = new THREE.Object3D();
-			playing.scene.add(playing.terrain);
-			
-			var xstart = 0;
-			var ystart = playing.gameMap.meta.size.y-1;
-			var zstart = 0;
+		//add charachter
+		playing.charachter = new PlayerCharachter();
+		playing.charachter.init(new THREE.Vector3(0,5,0));
+		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
+		playing.scene.add(playing.charachter.mesh);
 
-			var xpos = xstart;
-			var ypos = ystart;
-			var zpos = zstart;
+		var position = playing.charachter.mesh.getWorldPosition();
+		var direction = playing.charachter.mesh.getWorldDirection();
 
-			var xlength = playing.gameMap.meta.size.x;
-			var ylength = playing.gameMap.meta.size.y;
-			var zlength = playing.gameMap.meta.size.z;
+		playing.charachter.mesh.updateMatrixWorld( true );
 
-			var surface =  false;
-			var subLevel = 0;
-
-			buildWorld:
-			for(var index = playing.gameMap.data.length-1; index > 0; index--) {
-
-				var voxType = playing.gameMap.data[index];
-
-				if(voxType != 0) {
-
-					var sides = [];
-
-					if(playing.gameMap.data[parseInt(index)-1] == 0 || xpos+1 >= playing.gameMap.meta.size.x) {
-						sides.push("front");
-					}
-					if(playing.gameMap.data[parseInt(index)+1] == 0 || xpos-1 < 0) {
-						sides.push("back");
-					}
-
-					if(playing.gameMap.data[parseInt(index)-playing.gameMap.meta.size.x] == 0 || zpos+1 >= playing.gameMap.meta.size.z) {
-						sides.push("right");
-					}
-					if(playing.gameMap.data[parseInt(index)+playing.gameMap.meta.size.x] == 0 || zpos-1 < 0) {
-						sides.push("left");
-					}
-
-					if(playing.gameMap.data[parseInt(index)+(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos+1 >= playing.gameMap.meta.size.y) {
-						sides.push("top");
-					}
-
-					if(playing.gameMap.data[parseInt(index)-(playing.gameMap.meta.size.x*playing.gameMap.meta.size.z)] == 0 || ypos-1 < 0) {
-						sides.push("bottom");
-					}
-
-					if(sides.length > 0) {
-						var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
-						var voxel = new Voxel(position, voxType);
-						voxel.mesh.name = index;
-
-						for(var i in sides)  {
-							voxel.show(sides[i]);
-						}
-
-						playing.terrain.add(voxel.mesh);
-					}
-
-				} else {
-					surface == true;
-				}
-
-				xpos++;
-				if(xpos == xlength) {
-					xpos = xstart;
-					zpos++;
-					if(zpos == zlength) {
-						zpos = zstart;
-						ypos--;
-						if(surface == false) {
-							subLevel++
-							console.log(subLevel);
-							if(subLevel > 2) break buildWorld;
-						}
-						surface = false;
-					}					
-				}
-			}
-
-			//add charachter
-			playing.charachter = new PlayerCharachter();
-			playing.charachter.init(new THREE.Vector3(0,5,0));
-			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
-			playing.scene.add(playing.charachter.mesh);
-
-			var position = playing.charachter.mesh.getWorldPosition();
-			var direction = playing.charachter.mesh.getWorldDirection();
-
-			playing.charachter.mesh.updateMatrixWorld( true );
-
-			playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
-			playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
-
-		});
+		playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
+		playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
 
 			
 
@@ -209,12 +128,15 @@ function PlayingScope() {
 		}
 
 		if(e.which==32) {
+
 			var selectedVoxel = playing.scene.getObjectByName(playing.charachter.selectedVoxel.mesh.name);
 			console.log(selectedVoxel);
 
 			selectedVoxel.parent.remove(selectedVoxel);
 
-			console.log(playing.gameMap.data[selectedVoxel.name]);
+
+
+			console.log(selectedVoxel);
 		}
 
 	});

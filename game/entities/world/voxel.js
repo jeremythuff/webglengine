@@ -43,15 +43,17 @@ function VoxelScope() {
 		}
 
 		this.materialArray = material.materialArray;
-		this.mesh = new THREE.Mesh( cubeGeo, material.face );
+		this.mesh = new THREE.Mesh(cubeGeo, material.face);
 		this.mesh.position.x = position.x * voxelSize;
 		this.mesh.position.y = position.y * voxelSize;
 		this.mesh.position.z = position.z * voxelSize;
 		
 		this.mesh.castShadow = true;
 		this.mesh.receiveShadow = true;
+
+		this.mesh.userData.voxel = this;
 		
-		return this;
+		return this.mesh.userData.voxel;
 	}
 
 	Voxel.prototype = {
