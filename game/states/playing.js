@@ -106,7 +106,7 @@ function PlayingScope() {
 					if(sides.length > 0) {
 						var position = new THREE.Vector3(xpos-(xlength/2),ypos-ylength,zpos-(zlength/2));
 						var voxel = new Voxel(position, voxType);
-						voxel.name = index;
+						voxel.mesh.name = index;
 
 						for(var i in sides)  {
 							voxel.show(sides[i]);
@@ -147,8 +147,8 @@ function PlayingScope() {
 
 			playing.charachter.mesh.updateMatrixWorld( true );
 
-			playing.charachter.raycaster = new THREE.Raycaster (); 
-			//playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
+			playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
+			playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
 
 		});
 
@@ -171,37 +171,15 @@ function PlayingScope() {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 
-			var position = playing.charachter.mesh.getWorldPosition();
-			var direction = playing.charachter.mesh.getWorldDirection();
-
-			playing.charachter.mesh.updateMatrixWorld( true );
-					
-			playing.charachter.raycaster.set(new THREE.Vector3(position.x + 10, position.y+ 15, position.z + 10), new THREE.Vector3( direction.x, -1, direction.z));
-			playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
-
-
-			if(playing.charachter.intersects[0])
-			for( var matInd in playing.charachter.intersects[0].object.material.materials) {			
-				console.log(playing.charachter.intersects[0]);
-				var mat = playing.charachter.intersects[0].object.material.materials[matInd];
-				mat.color.set( 0xff0000 );
-			} 
-
-			console.log(playing.charachter);
-
-			var dir = new THREE.Vector3( direction.x, -1, direction.z );
-			var origin = new THREE.Vector3(position.x + 10, position.y + 15, position.z + 10);
-			var length = 150;
-			var hex = 0xffff00;
-
-			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
-			playing.scene.add( arrowHelper );
+			playing.charachter.selectVoxel(playing.scene, playing.terrain);
 
 		}
 
 		if(e.which==68) {
 			//d
 			playing.charachter.mesh.rotation.y -= 0.1;
+			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+
 		}
 
 		if(e.which==83) {
@@ -214,15 +192,29 @@ function PlayingScope() {
 			if(distanceFromChar >= 350) {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
+
+			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+
 		}
 
 		if(e.which==65) {
 			//a
-			playing.charachter.mesh.rotation.y += 0.1;	
+			playing.charachter.mesh.rotation.y += 0.1;
+			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+	
 		}
 
 		if(e.which==27) {
 			game.setState("MainMenu");
+		}
+
+		if(e.which==32) {
+			var selectedVoxel = playing.scene.getObjectByName(playing.charachter.selectedVoxel.mesh.name);
+			console.log(selectedVoxel);
+
+			selectedVoxel.parent.remove(selectedVoxel);
+
+			console.log(playing.gameMap.data[selectedVoxel.name]);
 		}
 
 	});

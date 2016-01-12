@@ -42,6 +42,10 @@ var PlayerCharachterScope = function() {
 		var player = this;
 
 		player.mesh = null;
+        player.selectedVoxel = {
+            mesh: null,
+            edgeHelper: null
+        }
 
 		return this;
 	}
@@ -58,7 +62,35 @@ var PlayerCharachterScope = function() {
 			player.mesh.castShadow = true;
 
 			if(cb) cb();
-		}
+		},
+        selectVoxel: function(scene, terrain) {
+
+            var player = this;
+            var position = player.mesh.getWorldPosition();
+            var direction = player.mesh.getWorldDirection();
+
+
+            player.mesh.updateMatrixWorld( true );
+                    
+            player.raycaster.set(new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z));
+            player.intersects = player.raycaster.intersectObject (terrain, true);
+
+
+            if(player.intersects[0]) {
+
+                if(player.selectedVoxel.edgeHelper) {
+                    scene.remove(player.selectedVoxel.edgeHelper);  
+                }
+
+                player.selectedVoxel.mesh = player.intersects[0].object;
+                player.selectedVoxel.edgeHelper = new THREE.EdgesHelper(player.selectedVoxel.mesh, 0xff9d00);
+
+                player.selectedVoxel.edgeHelper.material.linewidth = 5;
+                scene.add( player.selectedVoxel.edgeHelper);
+
+            }
+
+        }
 	}
 
 	return PlayerCharachter;
