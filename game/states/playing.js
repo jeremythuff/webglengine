@@ -58,7 +58,7 @@ function PlayingScope() {
 			playing.scene.add(playing.terrain);
 			
 			var xstart = 0;
-			var ystart = 0;
+			var ystart = playing.gameMap.meta.size.y-1;
 			var zstart = 0;
 
 			var xpos = xstart;
@@ -69,7 +69,11 @@ function PlayingScope() {
 			var ylength = playing.gameMap.meta.size.y;
 			var zlength = playing.gameMap.meta.size.z;
 
-			for(var index in playing.gameMap.data) {
+			var surface =  false;
+			var subLevel = 0;
+
+			buildWorld:
+			for(var index = playing.gameMap.data.length-1; index > 0; index--) {
 
 				var voxType = playing.gameMap.data[index];
 
@@ -77,17 +81,17 @@ function PlayingScope() {
 
 					var sides = [];
 
-					if(playing.gameMap.data[parseInt(index)+1] == 0 || xpos+1 >= playing.gameMap.meta.size.x) {
+					if(playing.gameMap.data[parseInt(index)-1] == 0 || xpos+1 >= playing.gameMap.meta.size.x) {
 						sides.push("front");
 					}
-					if(playing.gameMap.data[parseInt(index)-1] == 0 || xpos-1 < 0) {
+					if(playing.gameMap.data[parseInt(index)+1] == 0 || xpos-1 < 0) {
 						sides.push("back");
 					}
 
-					if(playing.gameMap.data[parseInt(index)+playing.gameMap.meta.size.x] == 0 || zpos+1 >= playing.gameMap.meta.size.z) {
+					if(playing.gameMap.data[parseInt(index)-playing.gameMap.meta.size.x] == 0 || zpos+1 >= playing.gameMap.meta.size.z) {
 						sides.push("right");
 					}
-					if(playing.gameMap.data[parseInt(index)-playing.gameMap.meta.size.x] == 0 || zpos-1 < 0) {
+					if(playing.gameMap.data[parseInt(index)+playing.gameMap.meta.size.x] == 0 || zpos-1 < 0) {
 						sides.push("left");
 					}
 
@@ -104,13 +108,15 @@ function PlayingScope() {
 						var voxel = new Voxel(position, voxType);
 						voxel.name = index;
 
-						for(var index in sides)  {
-							voxel.show(sides[index]);
+						for(var i in sides)  {
+							voxel.show(sides[i]);
 						}
 
 						playing.terrain.add(voxel.mesh);
 					}
 
+				} else {
+					surface == true;
 				}
 
 				xpos++;
@@ -119,23 +125,34 @@ function PlayingScope() {
 					zpos++;
 					if(zpos == zlength) {
 						zpos = zstart;
-						ypos++;
-						if(ypos == ylength) {
-							ypos = ystart;
+						ypos--;
+						if(surface == false) {
+							subLevel++
+							console.log(subLevel);
+							if(subLevel > 2) break buildWorld;
 						}
+						surface = false;
 					}					
 				}
-
-
 			}
+
+			//add charachter
+			playing.charachter = new PlayerCharachter();
+			playing.charachter.init(new THREE.Vector3(0,5,0));
+			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
+			playing.scene.add(playing.charachter.mesh);
+
+			var position = playing.charachter.mesh.getWorldPosition();
+			var direction = playing.charachter.mesh.getWorldDirection();
+
+			playing.charachter.mesh.updateMatrixWorld( true );
+
+			playing.charachter.raycaster = new THREE.Raycaster (); 
+			//playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
 
 		});
 
-		//add charachter
-		playing.charachter = new PlayerCharachter();
-		playing.charachter.init(new THREE.Vector3(0,5,0));
-		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
-		playing.scene.add(playing.charachter.mesh);		
+			
 
 		console.log("Playing has been initialized");
 	});
@@ -144,14 +161,41 @@ function PlayingScope() {
 		
 		if(e.which==87) {
 			//w
-			playing.charachter.mesh.translateX(2);
+			playing.charachter.mesh.translateZ(2);
+			playing.charachter.mesh.updateMatrix();
 			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
-			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
+			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position, new THREE.Vector3(1,-5,0));
 
 			if(distanceFromChar >= 350) {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
+
+			var position = playing.charachter.mesh.getWorldPosition();
+			var direction = playing.charachter.mesh.getWorldDirection();
+
+			playing.charachter.mesh.updateMatrixWorld( true );
+					
+			playing.charachter.raycaster.set(new THREE.Vector3(position.x + 10, position.y+ 15, position.z + 10), new THREE.Vector3( direction.x, -1, direction.z));
+			playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
+
+
+			if(playing.charachter.intersects[0])
+			for( var matInd in playing.charachter.intersects[0].object.material.materials) {			
+				console.log(playing.charachter.intersects[0]);
+				var mat = playing.charachter.intersects[0].object.material.materials[matInd];
+				mat.color.set( 0xff0000 );
+			} 
+
+			console.log(playing.charachter);
+
+			var dir = new THREE.Vector3( direction.x, -1, direction.z );
+			var origin = new THREE.Vector3(position.x + 10, position.y + 15, position.z + 10);
+			var length = 150;
+			var hex = 0xffff00;
+
+			var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+			playing.scene.add( arrowHelper );
 
 		}
 
@@ -162,7 +206,7 @@ function PlayingScope() {
 
 		if(e.which==83) {
 			//s
-			playing.charachter.mesh.translateX(-2);
+			playing.charachter.mesh.translateZ(-2);
 			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
 			var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);

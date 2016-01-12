@@ -23,8 +23,8 @@ function MainMenuScope() {
 			game.setState("Playing");
 		}));
 
-		mainmenu.items.push(new MenuItem("Options", function() {
-			game.setState("Options");
+		mainmenu.items.push(new MenuItem("GenerateMap", function() {
+			game.setState("GenerateMap");
 		}));
 
 		mainmenu.items.push(new MenuItem("Exit", function() {

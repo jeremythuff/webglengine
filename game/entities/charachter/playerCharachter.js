@@ -5,34 +5,34 @@ var PlayerCharachterScope = function() {
 
 	var materialArray = [];
 
-    // Front
-    materialArray.push(new THREE.MeshLambertMaterial({
-        color:0x00ff00,
-    }));
-    
-    // Back
-    materialArray.push(new THREE.MeshLambertMaterial({
-        color:0xd8675d,
-    }));
-
-    // Top
-    materialArray.push(new THREE.MeshLambertMaterial({
-        color:0xd8675d,
-    }));
-
-    // Bottom
-    materialArray.push(new THREE.MeshLambertMaterial({
-        color:0xd8675d,
-    }));
-
     // Right
     materialArray.push(new THREE.MeshLambertMaterial({
-        color:0xd8675d,
+        color: 0xd8675d
     }));
     
     // Left
     materialArray.push(new THREE.MeshLambertMaterial({
-        color:0xd8675d,
+        color:0xd8675d
+    }));
+
+    // Top
+    materialArray.push(new THREE.MeshLambertMaterial({
+        color:0xd8675d
+    }));
+
+    // Bottom
+    materialArray.push(new THREE.MeshLambertMaterial({
+        color:0xd8675d
+    }));
+
+     // Front
+    materialArray.push(new THREE.MeshLambertMaterial({
+        color: 0x00ff00
+    }));
+    
+    // Back
+    materialArray.push(new THREE.MeshLambertMaterial({
+        color:0xd8675d
     }));
 
     var charMaterials = new THREE.MeshFaceMaterial(materialArray);
