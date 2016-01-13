@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
+    overflow: hidden;
 }
 
 .menu {
@@ -26,4 +27,17 @@ body {
 .menuItem.active {
 	color: #666;
 	background: #efefef;
+}
+
+.debug {
+    position: absolute;
+    color:white;
+    bottom: 0;
+    left:0;
+    width: 250px;
+    min-height: 100px;
+    font-family: sans-serif;
+    padding: 10px;
+    font-size: 0.75em;
+    background: rgba(100, 100, 150, 0.25);
 }

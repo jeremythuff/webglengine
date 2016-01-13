@@ -21,6 +21,11 @@ function PlayingScope() {
 			return;
 		}
 
+		//setup debug info
+		playing.debugElem = document.createElement("div");
+		playing.debugElem.classList.add('debug');
+		document.body.appendChild(playing.debugElem); 
+
 		//create camera
 		playing.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
 		if(!playing.cameraControls) playing.cameraControls = new THREE.OrbitControls( playing.camera );
@@ -51,11 +56,12 @@ function PlayingScope() {
 		});
 
 		//loadMap
-		playing.terrain = new THREE.Object3D();
-		playing.scene.add(playing.terrain);
-
 		playing.gameMap = new GameMap("game/data/maps/testMap.json");
-		playing.gameMap.init(playing.terrain);
+		playing.gameMap.init(new THREE.Object3D(), function() {
+			playing.debugElem.innerHTML += "Total Voxels: " + playing.gameMap.data.length +"<br>";
+			playing.debugElem.innerHTML += "Rendered Voxels: " + playing.gameMap.terrain.children.length +"<br>";
+		});
+		playing.scene.add(playing.gameMap.terrain);
 
 		//add charachter
 		playing.charachter = new PlayerCharachter();
@@ -69,7 +75,7 @@ function PlayingScope() {
 		playing.charachter.mesh.updateMatrixWorld( true );
 
 		playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
-		playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.terrain, true);
+		playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.gameMap.terrain, true);
 
 			
 
@@ -90,14 +96,14 @@ function PlayingScope() {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 
-			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+			playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
 
 		}
 
 		if(e.which==68) {
 			//d
 			playing.charachter.mesh.rotation.y -= 0.1;
-			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+			playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
 
 		}
 
@@ -112,14 +118,14 @@ function PlayingScope() {
 				playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
 			}
 
-			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+			playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
 
 		}
 
 		if(e.which==65) {
 			//a
 			playing.charachter.mesh.rotation.y += 0.1;
-			playing.charachter.selectVoxel(playing.scene, playing.terrain);
+			playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
 	
 		}
 
@@ -127,16 +133,15 @@ function PlayingScope() {
 			game.setState("MainMenu");
 		}
 
-		if(e.which==32) {
+		if(e.which==82) {
 
-			var selectedVoxel = playing.scene.getObjectByName(playing.charachter.selectedVoxel.mesh.name);
-			console.log(selectedVoxel);
+			var selectedMesh = playing.gameMap.terrain.getObjectByName(playing.charachter.selectedVoxel.mesh.name, true)
+			
+			if(!selectedMesh) return;
 
-			selectedVoxel.parent.remove(selectedVoxel);
+			var selectedVoxel = selectedMesh.userData.voxel;
+			playing.gameMap.removeVoxel(selectedVoxel);
 
-
-
-			console.log(selectedVoxel);
 		}
 
 	});
