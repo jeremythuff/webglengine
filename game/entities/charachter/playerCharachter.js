@@ -41,7 +41,7 @@ var PlayerCharachterScope = function() {
 		
 		var player = this;
 
-		player.mesh = null;
+        player.mesh = null;
         player.selectedVoxel = {
             mesh: null,
             edgeHelper: null
@@ -63,6 +63,43 @@ var PlayerCharachterScope = function() {
 
 			if(cb) cb();
 		},
+        render: function() {
+
+        },
+        walk: function(direction) {
+            var player = this;
+            var inertia;
+
+            switch(direction) {
+                case "foreward": 
+                    inertia = 1;
+                    break;
+                case "backwards":
+                    inertia = -1
+                    break;
+            }
+
+            player.mesh.translateZ(inertia);
+            player.mesh.updateMatrix();
+        },
+        run: function(direction) {
+            var player = this;
+
+            player.mesh.translateZ(1.5);
+            player.mesh.updateMatrix();
+        },
+        turn: function(direction) {
+            var player = this;
+
+            switch(direction) {
+                case "right":
+                    player.mesh.rotation.y -= 0.1;
+                    break;
+                case "left":
+                    player.mesh.rotation.y += 0.1;
+                    break;
+            }
+        },
         selectVoxel: function(scene, terrain) {
 
             var player = this;
@@ -88,6 +125,14 @@ var PlayerCharachterScope = function() {
                 player.selectedVoxel.edgeHelper.material.linewidth = 5;
                 scene.add( player.selectedVoxel.edgeHelper);
 
+            } else {
+                if(player.selectedVoxel.edgeHelper) {
+                    scene.remove(player.selectedVoxel.edgeHelper);  
+                }
+                player.selectedVoxel = {
+                    mesh: null,
+                    edgeHelper: null
+                }
             }
 
         }

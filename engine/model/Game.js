@@ -80,10 +80,10 @@ function GameScope() {
 			return game.states[name];
 		},
 		registerGlobalListener: function(event, cb) {
-
+			window.addEventListener(event, cb);
 		},
 		removeGlobalListener: function(event, cb) {
-
+			window.removeEventListener(event, cb);
 		},
 		screen: {
 

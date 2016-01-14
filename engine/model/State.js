@@ -2,8 +2,12 @@ function StateScope() {
 
 	var State = function(name) {
 		this.initialized = false;
+		
 		this.name = name;
+		this.keyboardState = new THREEx.KeyboardState();
+
 		this.listeners = {};
+		this.keyevents = [];
 		this.initCBs = {};
 		this.updateCBs = {};
 		this.renderCBs = {};
@@ -52,6 +56,10 @@ function StateScope() {
 			state.destroyCBs[cbID] = cb;
 			return cbID;
 		},
+		keyboard: function(keys, cb) {
+			var state = this;
+			state.keyevents.push({keys: keys, cb: cb});
+		},
 		init: function() {
 			var state = this;
 			for(var id in state.initCBs) {
@@ -73,6 +81,10 @@ function StateScope() {
 			var state = this;
 			for(var id in state.renderCBs) {
 				state.renderCBs[id](delta);
+			}
+			for(var index in state.keyevents) {
+				var keyeventObject = state.keyevents[index];
+				if( state.keyboardState.pressed(keyeventObject.keys) )     keyeventObject.cb();
 			}
 		},
 		close: function() {
