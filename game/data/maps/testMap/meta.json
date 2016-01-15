@@ -1,0 +1,32 @@
+{
+	"name": "Test Map",
+	"chunk": {
+		"size": {
+			"x": 10,
+			"y": 10,
+			"z": 10
+		}
+	},
+	"zone": {
+		"size": {
+			"x": 3, 
+			"y": 3
+		}
+	},
+	"map": {
+		"size": {
+			"x": 3,
+			"y": 3 
+		}
+	},
+	"playerStart": {
+		"zone": 5,
+		"chunk": 5,
+		"coord": {
+			"x": 8,
+			"y": 25,
+			"z": 8
+		}
+	}
+	
+}

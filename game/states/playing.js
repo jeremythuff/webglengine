@@ -1,10 +1,12 @@
 function PlayingScope() {
 
 	include("engine/model/State.js", "State", this);
-	include("game/entities/world/sky.js", "Sky", this);
+	
+	include("game/entities/world/Sky.js", "Sky", this);
 	include("game/entities/world/GameMap.js", "GameMap", this);
-	include("game/entities/world/voxel.js", "Voxel", this);
-	include("game/entities/charachter/playerCharachter.js", "PlayerCharachter", this);
+	include("game/entities/world/Voxel.js", "Voxel", this);
+	
+	include("game/entities/charachter/PlayerCharachter.js", "PlayerCharachter", this);
 
 	var engine = appContext.getSingleton("engine");
 	var game = appContext.getSingleton("game");
