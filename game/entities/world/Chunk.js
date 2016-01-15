@@ -41,7 +41,7 @@ var ChunkScope = function() {
 
 			var chunk = this;
 
-			this.live = true;
+			chunk.live = true;
 
 
 			chunk.build(function() {
@@ -95,7 +95,7 @@ var ChunkScope = function() {
 						location.y--;
 						if(surface == false) {
 							subLevel++
-							if(subLevel > 2) break buildWorld;
+							//if(subLevel > 2) break buildWorld;
 						}
 						surface = false;
 					}					
@@ -133,13 +133,13 @@ var ChunkScope = function() {
 				sides.push("bottom");
 			}
 
-				var adjustedLocation = {
-					x: location.x - (chunk.meta.size.x/2),
-					y: location.y - chunk.meta.size.y,
-					z: location.z - (chunk.meta.size.z/2)
-				}
+				// var adjustedLocation = {
+				// 	x: location.x - (chunk.meta.size.x/2),
+				// 	y: location.y - chunk.meta.size.y,
+				// 	z: location.z - (chunk.meta.size.z/2)
+				// }
 				
-				var voxel = new Voxel(adjustedLocation, type);
+				var voxel = new Voxel(location, type);
 				voxel.mesh.name = name.toString();
 
 				if(sides.length > 0) {

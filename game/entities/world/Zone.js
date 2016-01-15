@@ -39,14 +39,25 @@ var ZoneScope = function() {
 
 		var numberOfChunks = zone.meta.zone.size.x * zone.meta.zone.size.y;
 
-		var chunkWidth = zone.meta.chunk.size.x * 10;
-		var chunkHeight = zone.meta.chunk.size.z * 10;
+		console.log(zone);
+
+		var chunkWidth = zone.meta.chunk.size.x * zone.meta.voxel.size;
+		var chunkHeight = zone.meta.chunk.size.z * zone.meta.voxel.size;
+
+		console.log(chunkWidth);
+		console.log(chunkHeight);
 
 		var zoneWidth = zone.meta.zone.size.x * chunkWidth;
 		var zoneHeight = zone.meta.zone.size.y * chunkHeight;
 
-		var xStart = 0 - zoneWidth/2;
-		var yStart = 0 - zoneHeight/2;
+		console.log(zoneWidth);
+		console.log(zoneWidth);
+
+		var xStart = 0 - (zoneWidth/zone.meta.zone.size.x);
+		var yStart = 0 + (zoneHeight/zone.meta.zone.size.y);
+
+		console.log(xStart);
+		console.log(yStart);
 
 		var xPos = xStart;
 		var yPos = yStart;
@@ -81,11 +92,10 @@ var ZoneScope = function() {
 			})(i);
 
 			xPos += chunkWidth;
-
 			var count = (i+1);
 			if(count%zone.meta.zone.size.x==0) {
 				xPos = xStart;
-				yPos += chunkWidth;
+				yPos -= chunkWidth;
 			}
 			
 			

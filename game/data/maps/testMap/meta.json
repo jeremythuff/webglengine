@@ -1,5 +1,8 @@
 {
 	"name": "Test Map",
+	"voxel": {
+		"size": 10
+	},
 	"chunk": {
 		"size": {
 			"x": 10,

@@ -14,7 +14,10 @@ function GenerateMapScope() {
 
 		generateMap.camera.position.x = 170;
 		generateMap.camera.position.y = 100;
-		generateMap.camera.position.z = 170;		
+		generateMap.camera.position.z = 170;
+
+		generateMap.cameraControls.target.set(0,0,0);
+		
 
 		generateMap.gameMap = new GameMap("game/data/maps/testMap");
 		generateMap.gameMap.init(new THREE.Object3D(), function() {
