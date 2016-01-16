@@ -60,7 +60,7 @@ function PlayingScope() {
 		});
 
 		//loadMap
-		playing.gameMap = new GameMap("game/data/maps/testMap.json");
+		playing.gameMap = new GameMap("game/data/maps/testMap");
 		playing.gameMap.init(new THREE.Object3D(), function() {
 			playing.debugElem.innerHTML += "Total Voxels: " + playing.gameMap.data.length +"<br>";
 			playing.debugElem.innerHTML += "Rendered Voxels: " + playing.gameMap.terrain.children.length +"<br>";

@@ -39,67 +39,92 @@ var ZoneScope = function() {
 
 		var numberOfChunks = zone.meta.zone.size.x * zone.meta.zone.size.y;
 
-		console.log(zone);
+		// zone.chunks[0] = new Chunk(zone.url+"/1.json", {x:0, z:0});
+		// engine.utils.xhr(zone.chunks[0].url, function(chunkData) {	
+		// 	zone.chunks[0].init(zone, chunkData);
+		// 	cb();
+		// });
 
-		var chunkWidth = zone.meta.chunk.size.x * zone.meta.voxel.size;
-		var chunkHeight = zone.meta.chunk.size.z * zone.meta.voxel.size;
+		// zone.chunks[1] = new Chunk(zone.url+"/2.json", {x:0, z:10});
+		// engine.utils.xhr(zone.chunks[1].url, function(chunkData) {	
+		// 	zone.chunks[1].init(zone, chunkData);
+		// 	cb();
+		// });
+ 
 
-		console.log(chunkWidth);
-		console.log(chunkHeight);
+		var xStart = 0;
 
-		var zoneWidth = zone.meta.zone.size.x * chunkWidth;
-		var zoneHeight = zone.meta.zone.size.y * chunkHeight;
+		var location = {
+			x: 0,
+			z: 0
+		}
 
-		console.log(zoneWidth);
-		console.log(zoneWidth);
-
-		var xStart = 0 - (zoneWidth/zone.meta.zone.size.x);
-		var yStart = 0 + (zoneHeight/zone.meta.zone.size.y);
-
-		console.log(xStart);
-		console.log(yStart);
-
-		var xPos = xStart;
-		var yPos = yStart;
-
+		var loaded = 0;
 		for(var i=0; i<numberOfChunks; i++) {
 
-			var location = {
-				x: xPos,
-				y: yPos
+			zone.chunks[i] = new Chunk(zone.url+"/"+(i+1)+".json", location);
+
+			location.x += zone.meta.chunk.size.x;
+			if(location.x == zone.meta.chunk.size.x * zone.meta.zone.size.x) {
+				location.x = xStart;
+				location.z += zone.meta.chunk.size.z;
 			}
 
-			zone.chunks[i] = new Chunk(zone.url+"/"+(i+1)+".json", location);
-			console.log(location);
-			
 			if(i == zone.meta.playerStart.chunk-1) zone.currentChunk = zone.chunks[i];
 
-			(function (i) {
-				
-				engine.utils.xhr(zone.chunks[i].url, function(chunkData) {				
+			console.log(zone.currentChunk);
+
+			(function(i){
+
+				engine.utils.xhr(zone.chunks[i].url, function(chunkData) {	
 
 					zone.chunks[i].init(zone, chunkData);
-
-					if(i == numberOfChunks-1) {
+					loaded++;
+					if(loaded == numberOfChunks) {
 						zone.currentChunk.reify(function() {
 							zone.initialized = true;
 							cb();
 						});
-						
-					}	
+						cb();
+					}			
 				});
 
-			})(i);
+			})(i)
 
-			xPos += chunkWidth;
-			var count = (i+1);
-			if(count%zone.meta.zone.size.x==0) {
-				xPos = xStart;
-				yPos -= chunkWidth;
-			}
-			
-			
 		}
+
+
+		// for(var i=0; i<numberOfChunks; i++) {
+
+		// 	zone.chunks[i] = new Chunk(zone.url+"/"+(i+1)+".json", location);
+			
+		// 	if(i == zone.meta.playerStart.chunk-1) zone.currentChunk = zone.chunks[i];
+		// 	var loaded = 0;
+		// 	(function (i) {
+				
+				// engine.utils.xhr(zone.chunks[i].url, function(chunkData) {	
+
+				// 	zone.chunks[i].init(zone, chunkData);
+				// 	loaded++;
+				// 	if(loaded == numberOfChunks) {
+				// 		zone.currentChunk.reify(function() {
+				// 			zone.initialized = true;
+				// 			cb();
+				// 		});
+				// 	}
+
+		// 		});
+
+		// 	})(i);
+
+		// 	location.x += zone.meta.chunk.size.x;
+		// 	var count = (i+1);
+		// 	if(count%zone.meta.zone.size.x==0) {
+		// 		location.x = 0;
+		// 		location.z -= zone.meta.chunk.z;
+		// 	}
+			
+		// }
 
 	};
 

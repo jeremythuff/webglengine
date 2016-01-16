@@ -15,7 +15,10 @@ var ChunkScope = function() {
 		chunk.data = [];
 		chunk.live = false;
 		chunk.initialized = false;
-		chunk.location = location;
+		chunk.worldLocation = {
+			x: location.x,
+			z: location.z
+		}
 
 		return this;
 	}
@@ -27,11 +30,10 @@ var ChunkScope = function() {
 
 			var chunkDataObj = JSON.parse(chunkData);
 
-			chunk.meta = zone.meta.chunk;
 			chunk.data = chunkDataObj;
+			chunk.meta = zone.meta.chunk;
 			chunk.parentZone = zone;
 			
-
 			chunk.build(function() {
 				chunk.initialized = true;
 			});
@@ -55,9 +57,9 @@ var ChunkScope = function() {
 
 			var chunk = this;
 
-			var xstart = chunk.location.x;
-			var ystart = chunk.meta.size.y-1;
-			var zstart = chunk.location.y;
+			var xstart = chunk.worldLocation.x;
+			var ystart = chunk.meta.size.y;
+			var zstart = chunk.worldLocation.z;
 
 			var location = {
 				x: xstart,
@@ -74,8 +76,11 @@ var ChunkScope = function() {
 			var surface =  false;
 			var subLevel = 0;
 
+			var xCount = 0;
+			var zCount = 0;
+
 			buildWorld:
-			for(var index = chunk.data.length-1; index > 0; index--) {
+			for(var index = chunk.data.length-1; index >= 0; index--) {
 
 				var voxType = chunk.data[index];
 				if(voxType != 0) {
@@ -87,15 +92,17 @@ var ChunkScope = function() {
 				}
 
 				location.x++;
-				if(location.x == xlength) {
+				xCount++;
+				if(xCount%chunk.meta.size.x == 0) {
 					location.x = xstart;
+					zCount++;
 					location.z++;
-					if(location.z == zlength) {
+					if(zCount%chunk.meta.size.z == 0) {
 						location.z = zstart;
 						location.y--;
 						if(surface == false) {
 							subLevel++
-							//if(subLevel > 2) break buildWorld;
+							if(subLevel > 2) break buildWorld;
 						}
 						surface = false;
 					}					
@@ -111,48 +118,43 @@ var ChunkScope = function() {
 
 			var sides = [];
 
-			if(chunk.findNeighbor(name, "front").type == 0 || location.x+1 >= chunk.meta.size.x) {
+			if(chunk.findNeighbor(name, "front").type == 0 || location.x+1 >= chunk.meta.size.x + chunk.worldLocation.x) {
 				sides.push("front");
 			}
-			if(chunk.findNeighbor(name, "back").type == 0 || location.x-1 < 0) {
+			if(chunk.findNeighbor(name, "back").type == 0 || location.x-1 < 0 + chunk.worldLocation.x) {
 				sides.push("back");
 			}
 
-			if(chunk.findNeighbor(name, "right").type == 0 || location.z+1 >= chunk.meta.size.z) {
+			if(chunk.findNeighbor(name, "right").type == 0 || location.z+1 >= chunk.meta.size.z + chunk.worldLocation.z) {
 				sides.push("right");
 			}
-			if(chunk.findNeighbor(name, "left").type == 0 || location.z-1 < 0) {
+			if(chunk.findNeighbor(name, "left").type == 0 || location.z-1 < 0 + chunk.worldLocation.z) {
 				sides.push("left");
 			}
 
-			if(chunk.findNeighbor(name, "top").type == 0 || location.y+1 >= chunk.meta.size.y) {
+			if(chunk.findNeighbor(name, "top").type == 0 || location.y == chunk.meta.size.y) {
 				sides.push("top");
 			}
-
-			if(chunk.findNeighbor(name, "bottom").type == 0 || location.y-1 < 0) {
+			if(chunk.findNeighbor(name, "bottom").type == 0 || location.y == 1) {
 				sides.push("bottom");
 			}
 
-				// var adjustedLocation = {
-				// 	x: location.x - (chunk.meta.size.x/2),
-				// 	y: location.y - chunk.meta.size.y,
-				// 	z: location.z - (chunk.meta.size.z/2)
-				// }
-				
-				var voxel = new Voxel(location, type);
-				voxel.mesh.name = name.toString();
-
+			var adjustedLocation = {
+				x: location.x - (chunk.meta.size.x/2),
+				y: location.y - chunk.meta.size.y,
+				z: location.z - (chunk.meta.size.z/2)
+			}
+			
+			var voxel = new Voxel(adjustedLocation, type);
+			voxel.mesh.name = name.toString();
 				if(sides.length > 0) {
-					for(var i in sides)  {
-						voxel.show(sides[i]);
-					}
+				for(var i in sides)  {
+					voxel.show(sides[i]);
 				}
+			}
 
-				if(chunk.live) {
-					chunk.parentZone.terrain.add(voxel.mesh);			
-				} else {
-					return voxel.mesh;
-				}
+			chunk.parentZone.terrain.add(voxel.mesh);
+			
 			
 		},
 		removeVoxel: function(voxel) {

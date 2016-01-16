@@ -18,14 +18,13 @@ function GenerateMapScope() {
 
 		generateMap.cameraControls.target.set(0,0,0);
 		
-
 		generateMap.gameMap = new GameMap("game/data/maps/testMap");
 		generateMap.gameMap.init(new THREE.Object3D(), function() {
 			generateMap.scene.add(generateMap.gameMap.terrain);
 			console.log(generateMap);
 		});
 
-		//add lights
+		// add lights
 		// add subtle ambient lighting
         generateMap.ambientLight = new THREE.AmbientLight( 0x555555 ); // soft white light
 		generateMap.scene.add( generateMap.ambientLight );
