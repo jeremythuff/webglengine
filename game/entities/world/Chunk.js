@@ -83,12 +83,10 @@ var ChunkScope = function() {
 			for(var index = chunk.data.length-1; index >= 0; index--) {
 
 				var voxType = chunk.data[index];
-				if(voxType != 0) {
-					
+				if(voxType != "0") {
 					var voxelMesh = chunk.addVoxel(location, voxType, index);
-					
 				} else {
-					surface == true;
+					surface = true;
 				}
 
 				location.x++;
@@ -102,9 +100,10 @@ var ChunkScope = function() {
 						location.y--;
 						if(surface == false) {
 							subLevel++
+							console.log(subLevel);
 							if(subLevel > 2) break buildWorld;
-						}
-						surface = false;
+						} 
+						surface = false
 					}					
 				}
 			}

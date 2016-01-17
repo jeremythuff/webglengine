@@ -62,26 +62,28 @@ function PlayingScope() {
 		//loadMap
 		playing.gameMap = new GameMap("game/data/maps/testMap");
 		playing.gameMap.init(new THREE.Object3D(), function() {
-			playing.debugElem.innerHTML += "Total Voxels: " + playing.gameMap.data.length +"<br>";
-			playing.debugElem.innerHTML += "Rendered Voxels: " + playing.gameMap.terrain.children.length +"<br>";
+
+
+			//add charachter
+			playing.charachter = new PlayerCharachter();
+			playing.charachter.init(new THREE.Vector3(playing.gameMap.meta.playerStart.coord.x,playing.gameMap.meta.playerStart.coord.y,playing.gameMap.meta.playerStart.coord.z));
+			playing.scene.add(playing.charachter.mesh);
+
+			playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
+
+
+			var position = playing.charachter.mesh.getWorldPosition();
+			var direction = playing.charachter.mesh.getWorldDirection();
+
+			playing.charachter.mesh.updateMatrixWorld( true );
+
+			playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
+			playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.gameMap.terrain, true);
+
+			// playing.debugElem.innerHTML += "Total Voxels: " + playing.gameMap.data.length +"<br>";
+			// playing.debugElem.innerHTML += "Rendered Voxels: " + playing.gameMap.terrain.children.length +"<br>";
 		});
 		playing.scene.add(playing.gameMap.terrain);
-
-		//add charachter
-		playing.charachter = new PlayerCharachter();
-		playing.charachter.init(new THREE.Vector3(0,5,0));
-		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
-		playing.scene.add(playing.charachter.mesh);
-
-		var position = playing.charachter.mesh.getWorldPosition();
-		var direction = playing.charachter.mesh.getWorldDirection();
-
-		playing.charachter.mesh.updateMatrixWorld( true );
-
-		playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
-		playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.gameMap.terrain, true);
-
-			
 
 		console.log("Playing has been initialized");
 	});
@@ -153,7 +155,7 @@ function PlayingScope() {
 
 	playing.registerRenderCB(function(delta) {
 		playing.cameraControls.update(delta);
-		playing.charachter.render();
+		if(playing.charachter) playing.charachter.render();
 		game.renderer.render(playing.scene, playing.camera);	
 	});
 

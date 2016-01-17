@@ -39,19 +39,6 @@ var ZoneScope = function() {
 
 		var numberOfChunks = zone.meta.zone.size.x * zone.meta.zone.size.y;
 
-		// zone.chunks[0] = new Chunk(zone.url+"/1.json", {x:0, z:0});
-		// engine.utils.xhr(zone.chunks[0].url, function(chunkData) {	
-		// 	zone.chunks[0].init(zone, chunkData);
-		// 	cb();
-		// });
-
-		// zone.chunks[1] = new Chunk(zone.url+"/2.json", {x:0, z:10});
-		// engine.utils.xhr(zone.chunks[1].url, function(chunkData) {	
-		// 	zone.chunks[1].init(zone, chunkData);
-		// 	cb();
-		// });
- 
-
 		var xStart = 0;
 
 		var location = {
@@ -72,8 +59,6 @@ var ZoneScope = function() {
 
 			if(i == zone.meta.playerStart.chunk-1) zone.currentChunk = zone.chunks[i];
 
-			console.log(zone.currentChunk);
-
 			(function(i){
 
 				engine.utils.xhr(zone.chunks[i].url, function(chunkData) {	
@@ -85,46 +70,12 @@ var ZoneScope = function() {
 							zone.initialized = true;
 							cb();
 						});
-						cb();
 					}			
 				});
 
 			})(i)
 
 		}
-
-
-		// for(var i=0; i<numberOfChunks; i++) {
-
-		// 	zone.chunks[i] = new Chunk(zone.url+"/"+(i+1)+".json", location);
-			
-		// 	if(i == zone.meta.playerStart.chunk-1) zone.currentChunk = zone.chunks[i];
-		// 	var loaded = 0;
-		// 	(function (i) {
-				
-				// engine.utils.xhr(zone.chunks[i].url, function(chunkData) {	
-
-				// 	zone.chunks[i].init(zone, chunkData);
-				// 	loaded++;
-				// 	if(loaded == numberOfChunks) {
-				// 		zone.currentChunk.reify(function() {
-				// 			zone.initialized = true;
-				// 			cb();
-				// 		});
-				// 	}
-
-		// 		});
-
-		// 	})(i);
-
-		// 	location.x += zone.meta.chunk.size.x;
-		// 	var count = (i+1);
-		// 	if(count%zone.meta.zone.size.x==0) {
-		// 		location.x = 0;
-		// 		location.z -= zone.meta.chunk.z;
-		// 	}
-			
-		// }
 
 	};
 
