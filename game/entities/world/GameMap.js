@@ -40,6 +40,8 @@ var GameMapScope = function() {
 
 			var gameMap = this;
 
+			console.log(voxel);
+
 			var voxelNameParts = voxel.mesh.name.split(".");
 			var chunklID = voxelNameParts[0];
 			var voxelID = voxelNameParts[1];
@@ -63,7 +65,6 @@ var GameMapScope = function() {
 			for(var type in gameMap.meta.voxel.types) {
 				thisZone.archetypes[gameMap.meta.voxel.types[type]] = new Voxel({x:0,y:0,z:0}, gameMap.meta.voxel.types[type]).mesh;
 				delete thisZone.archetypes[gameMap.meta.voxel.types[type]].userData.voxel;
-				console.log(thisZone.archetypes[gameMap.meta.voxel.types[type]].userData);
 			}
 
 			if(i == gameMap.meta.playerStart.zone-1) {

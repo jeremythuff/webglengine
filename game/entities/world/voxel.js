@@ -15,14 +15,14 @@ function VoxelScope() {
 	var Voxel = function(position, type) {
 
 		if(typeof(mesh) != "undefined") {
-			// console.log("cloned mesh");
-			// this.materialArray = mesh.material.materials;
-			// this.mesh = mesh;
-			// this.mesh.position.x = position.x * voxelSize;
-			// this.mesh.position.y = position.y * voxelSize;
-			// this.mesh.position.z = position.z * voxelSize;
-			// this.mesh.userData.voxel = this;
-			// return;
+			console.log("cloned mesh");
+			this.materialArray = mesh.material.materials;
+			this.mesh = mesh;
+			this.mesh.position.x = position.x * voxelSize;
+			this.mesh.position.y = position.y * voxelSize;
+			this.mesh.position.z = position.z * voxelSize;
+			this.mesh.userData.voxel = this;
+			return;
 		}
 
 		var material;
@@ -54,6 +54,7 @@ function VoxelScope() {
 		}
 
 		this.materialArray = material.materialArray;
+		this.voxType = type;
 		this.mesh = new THREE.Mesh(cubeGeo, material.face);
 		this.mesh.position.x = position.x * voxelSize;
 		this.mesh.position.y = position.y * voxelSize;
