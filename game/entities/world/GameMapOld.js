@@ -111,7 +111,6 @@ var GameMapScope = function() {
 				sides.push("bottom");
 			}
 
-			
 
 				var adjustedLocation = {
 					x: location.x - (gameMap.meta.size.x/2),

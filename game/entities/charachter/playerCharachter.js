@@ -134,7 +134,7 @@ var PlayerCharachterScope = function() {
                     edgeHelper: null
                 }
             }
-
+            
         }
 	}
 

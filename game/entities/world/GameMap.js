@@ -32,6 +32,18 @@ var GameMapScope = function() {
 				});
 				
 			});
+		},
+		removeVoxel: function(voxel) {
+			var game = this;
+
+			var voxelNameParts = voxel.mesh.name.split(".");
+			var chunklID = voxelNameParts[0];
+			var voxelID = voxelNameParts[1];
+
+			var chunk = game.currentZone.chunks[parseInt(chunklID)-1];
+
+			chunk.removeVoxel(voxel);
+						
 		}
 	}
 

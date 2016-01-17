@@ -84,7 +84,7 @@ var ChunkScope = function() {
 
 				var voxType = chunk.data[index];
 				if(voxType != "0") {
-					var voxelMesh = chunk.addVoxel(location, voxType, index);
+					chunk.addVoxel(location, voxType, index);
 				} else {
 					surface = true;
 				}
@@ -145,8 +145,8 @@ var ChunkScope = function() {
 			}
 			
 			var voxel = new Voxel(adjustedLocation, type);
-			voxel.mesh.name = name.toString();
-				if(sides.length > 0) {
+			voxel.mesh.name = chunk.id.toString()+"."+name.toString();
+			if(sides.length > 0) {
 				for(var i in sides)  {
 					voxel.show(sides[i]);
 				}
@@ -161,7 +161,7 @@ var ChunkScope = function() {
 
 			chunk.parentZone.terrain.remove(voxel.mesh);
 
-			var neighborsObj = chunk.findNeighbors(voxel.mesh.name);
+			var neighborsObj = chunk.findNeighbors(voxel.mesh.name.split(".")[1]);
 
 			for(var side in neighborsObj) {
 				
@@ -180,8 +180,6 @@ var ChunkScope = function() {
 			}
 
 			//if it did not find a neighbor object check to see if it should be on the map and create it if it should
-
-
 		},
 		findNeighbor: function(index, side) {
 
@@ -192,33 +190,33 @@ var ChunkScope = function() {
 			switch(side) {
 				case "front":
 					var index = parseInt(index)-1;
-					neighbor.name = index.toString()
-					neighbor.type = chunk.data[neighbor.name];
+					neighbor.name = chunk.id.toString() +"."+ index.toString()
+					neighbor.type = chunk.data[index.toString()];
 					break
 				case "back":
 					var index = parseInt(index)+1;
-					neighbor.name = index.toString()
-					neighbor.type = chunk.data[neighbor.name];
+					neighbor.name = chunk.id.toString() +"."+ index.toString()
+					neighbor.type = chunk.data[index.toString()];
 					break
 				case "right":
 					var index = parseInt(index)-chunk.meta.size.x;
-					neighbor.name = index.toString()
-					neighbor.type = chunk.data[neighbor.name];
+					neighbor.name = chunk.id.toString() +"."+ index.toString()
+					neighbor.type = chunk.data[index.toString()];
 					break
 				case "left":
 					var index = parseInt(index)+chunk.meta.size.x;
-					neighbor.name = index.toString()
-					neighbor.type = chunk.data[neighbor.name];
+					neighbor.name = chunk.id.toString() +"."+ index.toString()
+					neighbor.type = chunk.data[index.toString()];
 					break
 				case "top":
 					var index = parseInt(index)+(chunk.meta.size.x*chunk.meta.size.z);
-					neighbor.name = index.toString()
-					neighbor.type = chunk.data[neighbor.name];
+					neighbor.name = chunk.id.toString() +"."+ index.toString()
+					neighbor.type = chunk.data[index.toString()];
 					break
 				case "bottom":
 					var index = parseInt(index)-(chunk.meta.size.x*chunk.meta.size.z);
-					neighbor.name = index.toString()
-					neighbor.type = chunk.data[neighbor.name];
+					neighbor.name = chunk.id.toString() +"."+ index.toString()
+					neighbor.type = chunk.data[index.toString()];
 					break
 				default: 
 					neighbor.type = 0;
@@ -264,7 +262,11 @@ var ChunkScope = function() {
 			neighbors.bottom.name = bottom.name;
 			neighbors.bottom.type = bottom.type;
 
-			chunk.terrain.traverse (function (object) {
+
+			console.log(neighbors);
+
+			chunk.parentZone.terrain.traverse (function (object) {
+
 				if(object.name == neighbors.front.name) {
 					neighbors.front.mesh = object;
 				}
