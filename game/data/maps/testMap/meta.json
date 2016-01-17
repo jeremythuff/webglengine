@@ -1,7 +1,15 @@
 {
 	"name": "Test Map",
 	"voxel": {
-		"size": 10
+		"size": 10,
+		"types": {
+			"dirt": 1,
+			"grass": 2,
+			"rock": 3,
+			"sand": 4,
+			"clay": 5,
+			"water": 6
+		}
 	},
 	"chunk": {
 		"size": {

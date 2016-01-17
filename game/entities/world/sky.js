@@ -30,8 +30,6 @@ function SkyScope() {
 					frag: sky.fragmentShader 
 				}, function(shaders) {
 					
-					console.log("load shaders in sky");
-
 					var material = new THREE.ShaderMaterial( {  
 					  uniforms:       uniforms,
 					  vertexShader:   shaders.vert,

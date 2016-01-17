@@ -68,7 +68,6 @@ var GameMapScope = function() {
 							location.y--;
 							if(surface == false) {
 								subLevel++
-								console.log(subLevel);
 								if(subLevel > 2) break buildWorld;
 							}
 							surface = false;

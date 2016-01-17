@@ -100,7 +100,6 @@ var ChunkScope = function() {
 						location.y--;
 						if(surface == false) {
 							subLevel++
-							console.log(subLevel);
 							if(subLevel > 2) break buildWorld;
 						} 
 						surface = false
@@ -144,7 +143,15 @@ var ChunkScope = function() {
 				z: location.z - (chunk.meta.size.z/2)
 			}
 			
-			var voxel = new Voxel(adjustedLocation, type);
+
+			if(chunk.live) {
+				var voxel = new Voxel(adjustedLocation, type);
+				
+			} else {
+				var voxel = new Voxel(adjustedLocation, type, chunk.parentZone.archetypes[type].clone());
+				console.log(voxel);
+			}
+
 			voxel.mesh.name = chunk.id.toString()+"."+name.toString();
 			if(sides.length > 0) {
 				for(var i in sides)  {
@@ -153,7 +160,6 @@ var ChunkScope = function() {
 			}
 
 			chunk.parentZone.terrain.add(voxel.mesh);
-			
 			
 		},
 		removeVoxel: function(voxel) {
@@ -261,9 +267,6 @@ var ChunkScope = function() {
 			var bottom = chunk.findNeighbor(index, "bottom");
 			neighbors.bottom.name = bottom.name;
 			neighbors.bottom.type = bottom.type;
-
-
-			console.log(neighbors);
 
 			chunk.parentZone.terrain.traverse (function (object) {
 

@@ -14,6 +14,7 @@ var ZoneScope = function() {
 		zone.meta;
 		zone.url = baseUrl;
 		zone.currentChunk;
+		zone.archetypes = {};
 		zone.chunks = {};
 		zone.initialized = false;
 
