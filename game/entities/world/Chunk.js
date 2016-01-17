@@ -35,11 +35,8 @@ var ChunkScope = function() {
 			chunk.meta = zone.meta.chunk;
 			chunk.terrain = {};
 			chunk.terrain.geometry = new THREE.Geometry();
+			chunk.terrain.mesh = new THREE.Mesh(chunk.terrain.geometry);
 			
-			chunk.terrain.meshes = {};
-			
-			chunk.terrain.mesh.name = chunk.id;
-
 			chunk.parentZone = zone;
 			
 			chunk.build(function() {
