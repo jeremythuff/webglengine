@@ -146,10 +146,8 @@ var ChunkScope = function() {
 
 			if(chunk.live) {
 				var voxel = new Voxel(adjustedLocation, type);
-				
 			} else {
 				var voxel = new Voxel(adjustedLocation, type, chunk.parentZone.archetypes[type].clone());
-				console.log(voxel);
 			}
 
 			voxel.mesh.name = chunk.id.toString()+"."+name.toString();
