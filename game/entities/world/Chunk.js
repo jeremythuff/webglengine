@@ -157,7 +157,6 @@ var ChunkScope = function() {
 
 			if(chunk.live) {
 				var voxel = new Voxel(adjustedLocation, type);
-				
 			} else {
 				var voxel = new Voxel(adjustedLocation, type, chunk.parentZone.archetypes[type].clone());
 			}

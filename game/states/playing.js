@@ -23,11 +23,6 @@ function PlayingScope() {
 			return;
 		}
 
-		//setup debug info
-		playing.debugElem = document.createElement("div");
-		playing.debugElem.classList.add('debug');
-		document.body.appendChild(playing.debugElem); 
-
 		//create camera
 		playing.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
 		if(!playing.cameraControls) playing.cameraControls = new THREE.OrbitControls( playing.camera );
@@ -61,7 +56,6 @@ function PlayingScope() {
 		playing.gameMap = new GameMap("game/data/maps/testMap");
 		playing.gameMap.init(new THREE.Object3D(), function() {
 
-
 			//add charachter
 			playing.charachter = new PlayerCharachter();
 			playing.charachter.init(new THREE.Vector3(playing.gameMap.meta.playerStart.coord.x,playing.gameMap.meta.playerStart.coord.y,playing.gameMap.meta.playerStart.coord.z));
@@ -75,76 +69,15 @@ function PlayingScope() {
 
 			playing.charachter.mesh.updateMatrixWorld( true );
 
+			playing.charachter.controlls(playing);
+
 			playing.charachter.raycaster = new THREE.Raycaster (new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z), 0, 15); 
 			playing.charachter.intersects = playing.charachter.raycaster.intersectObject (playing.gameMap.terrain, true);
 
-			// playing.debugElem.innerHTML += "Total Voxels: " + playing.gameMap.data.length +"<br>";
-			// playing.debugElem.innerHTML += "Rendered Voxels: " + playing.gameMap.terrain.children.length +"<br>";
 		});
 		playing.scene.add(playing.gameMap.terrain);
 
 		console.log("Playing has been initialized");
-	});
-
-	playing.keyboard("w", function() {
-		playing.charachter.walk("foreward");
-		playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);        
-
-		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
-
-        var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position, new THREE.Vector3(1,-5,0));
-
-        if(distanceFromChar >= 350) {
-            playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
-        }
-	});
-
-	playing.keyboard("shift+w", function() {
-		playing.charachter.run("foreward");
-
-		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
-
-        var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position, new THREE.Vector3(1,-5,0));
-
-        if(distanceFromChar >= 350) {
-            playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
-        }
-	});
-
-	playing.keyboard("d", function() {
-		playing.charachter.turn("right")
-		playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
-	});
-
-	playing.keyboard("s", function() {
-		playing.charachter.walk("backwards");
-		playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
-
-		playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
-
-        var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
-
-        if(distanceFromChar >= 350) {
-            playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
-        }
-
-	});
-
-	playing.keyboard("a", function() {
-		playing.charachter.turn("left")
-		playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
-	});
-
-	playing.keyboard("r", function() {
-
-		if(!playing.charachter.selectedVoxel) return;
-
-		var selectedMesh = playing.gameMap.terrain.getObjectByName(playing.charachter.selectedVoxel.mesh.name)
-		
-		if(!selectedMesh) return;
-
-		var selectedVoxel = selectedMesh.userData.voxel;
-		playing.gameMap.removeVoxel(selectedVoxel);
 	});
 
 	playing.keyboard("esc", function() {
