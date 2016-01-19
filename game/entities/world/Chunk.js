@@ -18,7 +18,7 @@ var ChunkScope = function() {
 		chunk.terrain = new THREE.Object3D();
 		chunk.terrain.name = chunk.id;
 
-
+		chunk.voxelsByType = {}
 
 		chunk.worldLocation = {
 			x: location.x,
@@ -107,6 +107,15 @@ var ChunkScope = function() {
 						if(surface == false) {
 							subLevel++
 							if(subLevel > 2) {
+								
+								if(!chunk.live) {
+
+									for(var type in chunk.voxelsByType) {
+										chunk.terrain.add(mergeMeshes(chunk.voxelsByType[type]))
+									}
+
+								}
+
 								chunk.parentZone.terrain.add(chunk.terrain);
 								break buildWorld;
 							}
@@ -120,10 +129,13 @@ var ChunkScope = function() {
 
 		},
 		removeOldChunk: function() {
+			
 			var chunk = this;
 
 			var oldChunk = chunk.parentZone.terrain.getObjectByName(chunk.id);
-			if(oldChunk) chunk.parentZone.terrain.remove(oldChunk);
+			if(oldChunk) {
+				chunk.parentZone.terrain.remove(oldChunk);
+			}
 
 		},
 		addVoxel: function(location, type, name) {
@@ -168,7 +180,12 @@ var ChunkScope = function() {
 				}
 			}
 
-			chunk.terrain.add(voxel.mesh);
+			if(chunk.live) {
+				chunk.terrain.add(voxel.mesh);
+			} else {
+				if(!chunk.voxelsByType[type]) chunk.voxelsByType[type] = [];
+				chunk.voxelsByType[type].push(voxel.mesh);
+			}
 			
 		},
 		removeVoxel: function(voxel) {
@@ -301,9 +318,32 @@ var ChunkScope = function() {
 				}
 			});
 
-
 			return neighbors;
 		}
+	};
+
+	function mergeMeshes (meshArr) {
+	    var geometry = new THREE.Geometry(),
+	        materials = [],
+	        m,
+	        materialPointer = 0,
+	        reindex = 0;
+
+	    for (var i = 0; i < meshArr.length; i++) {
+	        m = meshArr[i];
+
+	        if (m.material.materials) {
+	            for (var j = 0; j < m.material.materials.length; j++) {
+	                materials[materialPointer++] = m.material.materials[j];
+	            }
+	        } else if (m.material) {
+	            materials[materialPointer++] = m.material;
+	        }
+	        m.updateMatrix();
+	        geometry.merge(m.geometry, m.matrix, reindex);
+	        reindex = materialPointer;
+	    }
+	    return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 	};
 
 	return Chunk;
