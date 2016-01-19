@@ -134,9 +134,14 @@ var ChunkScope = function() {
 
 			var oldChunk = chunk.parentZone.terrain.getObjectByName(chunk.id);
 			if(oldChunk) {
+				chunk.resetTerrain();
 				chunk.parentZone.terrain.remove(oldChunk);
 			}
 
+		},
+		resetTerrain: function() {
+			var chunk = this;
+			chunk.terrain = new THREE.Object3D();
 		},
 		addVoxel: function(location, type, name) {
 

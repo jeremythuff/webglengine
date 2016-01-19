@@ -106,7 +106,6 @@ var PlayerCharachterScope = function() {
             var position = player.mesh.getWorldPosition();
             var direction = player.mesh.getWorldDirection();
 
-
             player.mesh.updateMatrixWorld( true );
                     
             player.raycaster.set(new THREE.Vector3(position.x, position.y  -5, position.z), new THREE.Vector3( direction.x, -0.5, direction.z));
