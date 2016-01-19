@@ -348,7 +348,10 @@ var ChunkScope = function() {
 	        geometry.merge(m.geometry, m.matrix, reindex);
 	        reindex = materialPointer;
 	    }
-	    return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+
+	    var mergedMesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+	    mergedMesh.receiveShadow = true;
+	    return mergedMesh;
 	};
 
 	return Chunk;
