@@ -46,6 +46,9 @@ function PlayingScope() {
         playing.spotLight.castShadow = true;
         playing.scene.add(playing.spotLight);
 
+
+        //playing.scene.fog = new THREE.FogExp2( 0x000000, 0.005 );
+
 		//add skybox
 		playing.sky = new Sky('game/resources/img/sky3.jpg');
 		playing.sky.init(function(sky) {
