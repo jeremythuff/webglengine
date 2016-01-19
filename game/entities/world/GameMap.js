@@ -60,12 +60,6 @@ var GameMapScope = function() {
 			gameMap.zones[i] = new Zone(gameMap.baseUrl+"/"+(i+1));
 			var thisZone = gameMap.zones[i];
 
-			for(var type in gameMap.meta.voxel.types) {
-				thisZone.archetypes[gameMap.meta.voxel.types[type]] = new Voxel({x:0,y:0,z:0}, gameMap.meta.voxel.types[type]).mesh;
-				delete thisZone.archetypes[gameMap.meta.voxel.types[type]].userData.voxel;
-				console.log(thisZone.archetypes[gameMap.meta.voxel.types[type]].userData);
-			}
-
 			if(i == gameMap.meta.playerStart.zone-1) {
 				gameMap.currentZone = thisZone;
 				gameMap.currentZone.init(gameMap, function() {

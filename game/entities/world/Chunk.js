@@ -15,6 +15,11 @@ var ChunkScope = function() {
 		chunk.data = [];
 		chunk.live = false;
 		chunk.initialized = false;
+		chunk.terrain = new THREE.Object3D();
+		chunk.terrain.name = chunk.id;
+
+
+
 		chunk.worldLocation = {
 			x: location.x,
 			z: location.z
@@ -45,6 +50,7 @@ var ChunkScope = function() {
 
 			chunk.live = true;
 
+			chunk.removeOldChunk();
 
 			chunk.build(function() {
 				chunk.initialized = true;
@@ -100,7 +106,10 @@ var ChunkScope = function() {
 						location.y--;
 						if(surface == false) {
 							subLevel++
-							if(subLevel > 2) break buildWorld;
+							if(subLevel > 2) {
+								chunk.parentZone.terrain.add(chunk.terrain);
+								break buildWorld;
+							}
 						} 
 						surface = false
 					}					
@@ -108,6 +117,13 @@ var ChunkScope = function() {
 			}
 
 			if(cb) cb();
+
+		},
+		removeOldChunk: function() {
+			var chunk = this;
+
+			var oldChunk = chunk.parentZone.terrain.getObjectByName(chunk.id);
+			if(oldChunk) chunk.parentZone.terrain.remove(oldChunk);
 
 		},
 		addVoxel: function(location, type, name) {
@@ -143,12 +159,7 @@ var ChunkScope = function() {
 				z: location.z - (chunk.meta.size.z/2)
 			}
 			
-
-			if(chunk.live) {
-				var voxel = new Voxel(adjustedLocation, type);
-			} else {
-				var voxel = new Voxel(adjustedLocation, type, chunk.parentZone.archetypes[type].clone());
-			}
+			var voxel = new Voxel(adjustedLocation, type);
 
 			voxel.mesh.name = chunk.id.toString()+"."+name.toString();
 			if(sides.length > 0) {
@@ -157,13 +168,13 @@ var ChunkScope = function() {
 				}
 			}
 
-			chunk.parentZone.terrain.add(voxel.mesh);
+			chunk.terrain.add(voxel.mesh);
 			
 		},
 		removeVoxel: function(voxel) {
 			var chunk = this;
 
-			chunk.parentZone.terrain.remove(voxel.mesh);
+			chunk.terrain.remove(voxel.mesh);
 
 			var neighborsObj = chunk.findNeighbors(voxel.mesh.name.split(".")[1]);
 

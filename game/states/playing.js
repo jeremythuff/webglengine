@@ -14,8 +14,6 @@ function PlayingScope() {
 
 	playing.registerInitCB(function() {
 
-		console.log(playing.keyboard);
-
 		//if the playing state has already been inititialized then return control and skip 
 		
 		engine.utils.toggleRenderStats(true);

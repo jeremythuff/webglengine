@@ -140,7 +140,7 @@ var PlayerCharachterScope = function() {
 
             playing.keyboard("w", function() {
                 playing.charachter.walk("foreward");
-                playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);        
+                playing.charachter.selectVoxel(playing.scene, playing.gameMap.currentZone.currentChunk.terrain);        
 
                 playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
@@ -165,18 +165,18 @@ var PlayerCharachterScope = function() {
 
             playing.keyboard("d", function() {
                 playing.charachter.turn("right")
-                playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
+                playing.charachter.selectVoxel(playing.scene, playing.gameMap.currentZone.currentChunk.terrain);
             });
 
             playing.keyboard("s", function() {
                 playing.charachter.walk("backwards");
-                playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
+                playing.charachter.selectVoxel(playing.scene, playing.gameMap.currentZone.currentChunk.terrain);
 
                 playing.cameraControls.target.set(playing.charachter.mesh.position.x, playing.charachter.mesh.position.y, playing.charachter.mesh.position.z);
 
                 var distanceFromChar = playing.camera.position.distanceTo(playing.charachter.mesh.position);
 
-                if(distanceFromChar >= 350) {
+                if(distanceFromChar >= 300) {
                     playing.camera.translateZ((distanceFromChar*distanceFromChar*-1)*0.0001);
                 }
 
@@ -184,14 +184,14 @@ var PlayerCharachterScope = function() {
 
             playing.keyboard("a", function() {
                 playing.charachter.turn("left")
-                playing.charachter.selectVoxel(playing.scene, playing.gameMap.terrain);
+                playing.charachter.selectVoxel(playing.scene, playing.gameMap.currentZone.currentChunk.terrain);
             });
 
             playing.keyboard("r", function() {
 
                 if(!playing.charachter.selectedVoxel) return;
 
-                var selectedMesh = playing.gameMap.terrain.getObjectByName(playing.charachter.selectedVoxel.mesh.name)
+                var selectedMesh = playing.gameMap.currentZone.currentChunk.terrain.getObjectByName(playing.charachter.selectedVoxel.mesh.name)
                 
                 if(!selectedMesh) return;
 
